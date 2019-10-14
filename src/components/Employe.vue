@@ -89,7 +89,38 @@
             clearable
           ></v-text-field>
         </v-flex>
+      </v-layout>
 
+      <v-layout wrap justify-end align-end>
+        <v-flex shrink>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+              <v-btn icon v-on="on" @click="show_prof_data = !show_prof_data">
+                <v-icon>{{ show_prof_data ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
+              </v-btn>
+            </template>
+            <span>{{show_prof_data ? $t('userInterface.hideProfData') : $t('userInterface.showProfData')}}</span>
+          </v-tooltip>
+        </v-flex>
+      </v-layout>
+      <v-layout wrap>
+        <v-flex xs12 sm4 md4 v-show="show_prof_data">
+          <v-autocomplete
+            v-model="employee.idou"
+            :items="orgunits"
+            color="primary"
+            hide-no-data
+            clearable
+            item-text="Description"
+            item-value="IdOrgUnit"
+            :label="$t('userInterface.orgUnit')"
+            :placeholder="$t('userInterface.searchHint')"
+            autocomplete="something-new"
+          ></v-autocomplete>
+        </v-flex>
+      </v-layout>
+
+      <v-layout wrap>
         <v-flex xs12 align-content-center>
           <v-btn
             :disabled="!valid"
@@ -109,9 +140,34 @@
 </template>
 
 <script>
+
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
+import '@mdi/font/css/materialdesignicons.css'
+
+import { DEV, ORGUNIT_INIT, EMPLOYEE_INIT } from '../config'
+import { ORGUNIT_URL_AJAX } from '../config'
+import { orgunit as ORGUNIT } from './orgunit'
+
+import Log from 'cgil-log'
+import jsonpath from 'jsonpath'
+
+const MODULE_NAME = 'EmployeSearch.vue'
+const log = (DEV) ? new Log(MODULE_NAME, 4) : new Log(MODULE_NAME, 2)
+
 export default {
   name: 'Employe',
+  props: {
+    get_data_url: {
+      type: Object,
+      default: () => ({
+          orgunit_url: '',
+          employee_url: ''
+      }),
+      require: false
+    }
+  },
   data: () => ({
+    show_prof_data: false,
     valid: true,
     employee: {
       idempeditor: -1,
@@ -202,7 +258,9 @@ export default {
         const pattern = /^null|[\d]+$/
         return pattern.test(value) || 'Valeur invalide'
       }
-    }
+    },
+    orgunit: undefined,
+    orgunits: []
   }),
   watch: {
     'employee.idpolitesse': function (val) {
@@ -215,11 +273,28 @@ export default {
     }
   },
   methods: {
+    initialize () {
+      //this.employee = Object.assign({}, EMPLOYEE_INIT)
+      this.orgunit = Object.assign({}, ORGUNIT_INIT)
+      this.get_data_url.orgunit_url = (this.get_data_url.orgunit_url === '') ? ORGUNIT_URL_AJAX : this.get_data_url.orgunit_url
+      this.getOUList()
+    },
     validate () {
       if (this.$refs.form_data.validate()) {
         this.snackbar = true
       }
+    },
+    getOUList() {
+      ORGUNIT.getList (this.orgunit, this.get_data_url.orgunit_url, (data) => {
+        this.orgunits = data
+      })
     }
+  },
+  created () {
+    this.initialize()
   }
 }
 </script>
+
+<i18n src="../locales/fr.json"></i18n>
+<i18n src="../locales/en.json"></i18n>
