@@ -20,7 +20,6 @@ class OrgUnit {
     return instance
   }
 
-
   getList(orgunit, get_data_url, callback) {
     let __fetch_url = `${get_data_url}/uniteorg_get_liste.php`
     axios.post(__fetch_url, {
