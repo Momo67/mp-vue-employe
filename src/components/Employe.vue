@@ -11,7 +11,7 @@
             item-text="politesse"
             item-value="id"
             :items="[{id: 1, politesse:'Monsieur'}, {id: 2, politesse:'Madame'}]"
-            label="Politesse"
+            :label="$t('userInterface.Courtesy')"
             required
             clearable
           ></v-select>
@@ -22,7 +22,7 @@
             v-model="employee.nom"
             :rules="[rules.required,rules.nomprenom]"
             counter="40"
-            label="Nom"
+            :label="$t('userInterface.LastName')"
             required
             clearable
           ></v-text-field>
@@ -33,27 +33,48 @@
             v-model="employee.prenom"
             :rules="[rules.required,rules.nomprenom]"
             counter="30"
-            label="Prénom"
+            :label="$t('userInterface.FirstName')"
             required
             clearable
           ></v-text-field>
         </v-flex>
 
         <v-flex xs12 sm4 md4> 
-          <v-text-field
-            v-model="employee.datenaissance"
-            :rules="[rules.date]"
-            label="Date de naissance"
-            hint="jj.mm.aaaa"
-            clearable
-          ></v-text-field>
+          <v-menu
+            ref="menuDateNaissance"
+            v-model="menuDateNaissance"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            max-width="290px"
+            min-width="290px"
+          >
+            <template v-slot:activator="{ on }">
+              <v-text-field
+                v-model="dateNaissanceCH"
+                :label="$t('userInterface.Birthdate')"
+                hint="jj.mm.aaaa"
+                @blur="employee.datenaissance = parseDate(dateNaissanceCH)"
+                v-on="on"
+                clearable
+              ></v-text-field>
+            </template>
+            <v-date-picker 
+              v-model="employee.datenaissance" 
+              :max="new Date().toISOString().substr(0, 10)"
+              @input="menuDateNaissance = false" 
+              :first-day-of-week="1" 
+              locale="fr">
+            </v-date-picker>
+          </v-menu>
         </v-flex>
 
         <v-flex xs12 sm4 md4> 
           <v-text-field
             v-model="employee.telprive"
             :rules="[rules.telprive]"
-            label="Téléphone privé"
+            :label="$t('userInterface.PrivatePhone')"
             hint="0xx xxx xx xx"
             clearable
           ></v-text-field>
@@ -65,7 +86,7 @@
           <v-text-field
             v-model="employee.adresse"
             :rules="[rules.adresse]"
-            label="Adresse"
+            :label="$t('userInterface.Address')"
             counter="50"
             clearable
           ></v-text-field>
@@ -75,7 +96,7 @@
           <v-text-field
             v-model="employee.codepostal"
             :rules="[rules.codepostal]"
-            label="Code postal"
+            :label="$t('userInterface.PostalCode')"
             clearable
           ></v-text-field>
         </v-flex>
@@ -84,7 +105,7 @@
           <v-text-field
             v-model="employee.localite"
             :rules="[rules.localite]"
-            label="Localité"
+            :label="$t('userInterface.Locality')"
             counter="50"
             clearable
           ></v-text-field>
@@ -103,25 +124,232 @@
           </v-tooltip>
         </v-flex>
       </v-layout>
-      <v-layout wrap>
-        <v-flex xs12 sm4 md4 v-show="show_prof_data">
+      <v-layout wrap v-show="show_prof_data">
+        <v-flex xs12 sm4 md4>
           <v-autocomplete
             v-model="employee.idou"
+            :rules="[rules.required]"
             :items="orgunits"
             color="primary"
             hide-no-data
-            clearable
             item-text="Description"
             item-value="IdOrgUnit"
-            :label="$t('userInterface.orgUnit')"
-            :placeholder="$t('userInterface.searchHint')"
+            :label="$t('userInterface.OrgUnit')"
+            :placeholder="$t('userInterface.SearchHint')"
             autocomplete="something-new"
+            required
+            clearable
           ></v-autocomplete>
+        </v-flex>
+
+        <v-flex xs12 sm4 md4>
+          <v-autocomplete
+            v-model="employee.idfonction"
+            :rules="[rules.required]"
+            :items="fonctions"
+            color="primary"
+            hide-no-data
+            item-text="Nom"
+            item-value="Id"
+            :label="$t('userInterface.Fonction')"
+            :placeholder="$t('userInterface.SearchHint')"
+            autocomplete="something-new"
+            required
+            clearable
+          ></v-autocomplete>
+        </v-flex>
+
+        <v-flex xs12 sm4 md4> 
+          <v-text-field
+            v-model="initiales"
+            :rules="[rules.initiales]"
+            :label="$t('userInterface.Initials')"
+            counter="10"
+            clearable
+          ></v-text-field>
+        </v-flex>
+        
+        <v-flex xs12 sm4 md4> 
+          <v-text-field
+            v-model="employee.email"
+            :rules="[rules.required, rules.email]"
+            :label="$t('userInterface.Email')"
+            counter="50"
+            required
+            clearable
+          ></v-text-field>
+        </v-flex>
+        
+        <v-flex xs12 sm4 md4> 
+          <v-text-field
+            v-model="employee.telprof"
+            :rules="[rules.telprof]"
+            :label="$t('userInterface.ProfPhone')"
+            hint="xx xx ou 0xx xxx xx xx"
+            clearable
+          ></v-text-field>
+        </v-flex>
+        
+        <v-flex xs12 sm4 md4> 
+          <v-text-field
+            v-model="employee.natel"
+            :rules="[rules.natel]"
+            :label="$t('userInterface.Natel')"
+            hint="07x xxx xx xx"
+            clearable
+          ></v-text-field>
+        </v-flex>
+        
+        <v-flex xs12 sm4 md4> 
+          <v-text-field
+            v-model="employee.tauxactiv"
+            :rules="[rules.tauxactiv]"
+            :label="$t('userInterface.OccupancyRate')"
+            counter="3"
+            hint="%"
+            clearable
+          ></v-text-field>
+        </v-flex>
+
+        <v-flex xs12 sm4 md4> 
+          <v-menu
+            ref="menuDebutActiv"
+            v-model="menuDebutActiv"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            max-width="290px"
+            min-width="290px"
+          >
+            <template v-slot:activator="{ on }">
+              <v-text-field
+                v-model="dateDebutActivCH"
+                :label="$t('userInterface.ActivityStart')"
+                hint="jj.mm.aaaa"
+                persistent-hint
+                @blur="employee.debutactiv = parseDate(dateDebutActivCH)"
+                v-on="on"
+                clearable
+              ></v-text-field>
+            </template>
+            <v-date-picker v-model="employee.debutactiv" @input="menuDebutActiv = false" :first-day-of-week="1" locale="fr"></v-date-picker>
+          </v-menu>
+        </v-flex>
+
+        <v-flex xs12 sm4 md4> 
+          <v-menu
+            ref="menuFinActiv"
+            v-model="menuFinActiv"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            max-width="290px"
+            min-width="290px"
+          >
+            <template v-slot:activator="{ on }">
+              <v-text-field
+                v-model="dateFinActivCH"
+                :label="$t('userInterface.ActivityEnd')"
+                hint="jj.mm.aaaa"
+                persistent-hint
+                @blur="employee.finactiv = parseDate(dateFinActivCH)"
+                v-on="on"
+                clearable
+              ></v-text-field>
+            </template>
+            <v-date-picker v-model="employee.finactiv" @input="menuFinActiv = false" :first-day-of-week="1" locale="fr"></v-date-picker>
+          </v-menu>
+        </v-flex>
+
+        <v-flex xs12 sm4 md4>
+          <v-text-field
+            v-model="employee.codezadig"
+            :rules="[rules.codezadig]"
+            :label="$t('userInterface.CodeZadig')"
+            clearable
+          ></v-text-field>
+        </v-flex>
+
+        <v-flex xs12 sm4 md4> 
+          <v-text-field
+            v-model="employee.loginnt"
+            :rules="[rules.required,rules.loginnt]"
+            counter="30"
+            :label="$t('userInterface.LoginNT')"
+            required
+            clearable
+          ></v-text-field>
+        </v-flex>
+
+        <v-flex xs12 sm4 md4> 
+          <v-text-field
+            v-model="employee.exchangelogin"
+            :rules="[]"
+            counter="30"
+            :label="$t('userInterface.ExchangeLogin')"
+            clearable
+          ></v-text-field>
+        </v-flex>
+
+        <v-flex xs12 sm4 md4>
+          <v-select
+            v-model="employee.isactive"
+            :rules="[rules.required]"
+            item-text="etat"
+            item-value="id"
+            :items="[{id: 1, etat:'oui'}, {id: 0, etat:'non'}]"
+            :label="$t('userInterface.Active')"
+            required
+            clearable
+          ></v-select>
+        </v-flex>
+
+        <v-flex xs12 sm4 md4> 
+          <v-text-field
+            v-model="employee.idmanager"
+            counter="30"
+            :label="$t('userInterface.Manager')"
+            clearable
+          ></v-text-field>
+        </v-flex>
+      </v-layout>
+
+      <v-layout wrap justify-end align-end>
+        <v-flex shrink>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+              <v-btn icon v-on="on" @click="show_comment = !show_comment">
+                <v-icon>{{ show_comment ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
+              </v-btn>
+            </template>
+            <span>{{show_comment ? $t('userInterface.hideComment') : $t('userInterface.showComment')}}</span>
+          </v-tooltip>
+        </v-flex>
+      </v-layout>
+      <v-layout wrap v-show="show_comment">
+        <v-flex> 
+          <v-textarea
+            v-model="employee.commentaire"
+            :rules="[rules.commentaire]"
+            counter="250"
+            :label="$t('userInterface.Comment')"
+            clearable
+          ></v-textarea>
         </v-flex>
       </v-layout>
 
       <v-layout wrap>
-        <v-flex xs12 align-content-center>
+        <v-flex xs2 align-content-center>
+          <v-btn
+            color="info"
+            @click="save"
+          >
+            Save
+          </v-btn>
+        </v-flex>
+        <v-flex xs2 align-content-center>
           <v-btn
             :disabled="!valid"
             color="success"
@@ -130,11 +358,52 @@
             Validate
           </v-btn>
         </v-flex>
+        <v-flex xs2 align-content-center>
+          <v-btn
+            color="info"
+            @click="checkRights"
+          >
+            Check rights
+          </v-btn>
+        </v-flex>
 
         <v-flex xs12 md12 lg12>
           {{employee}}
         </v-flex>
+        <v-flex xs12 md12 lg12>
+          {{show_msg}}
+        </v-flex>
       </v-layout>
+
+<!--
+      <v-layout wrap>
+        <v-dialog
+          v-model="show_msg"
+          max-width="500"
+        >
+          <v-alert
+            type="warning"
+            icon="error"
+          >
+            {{message}}
+          </v-alert>
+        </v-dialog>
+      </v-layout>
+-->      
+      <v-dialog
+        ref="message"
+        v-model="show_msg"
+        max-width="xs6"
+        width="550"
+        hide-overlay
+      >
+        <v-alert
+          :type="type_msg"
+          icon="error"
+        >
+          {{message}}
+        </v-alert>
+      </v-dialog>
     </v-container>
   </v-form>
 </template>
@@ -145,7 +414,8 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import '@mdi/font/css/materialdesignicons.css'
 
 import { DEV, ORGUNIT_INIT, EMPLOYEE_INIT } from '../config'
-import { ORGUNIT_URL_AJAX } from '../config'
+import { EMP_URL_AJAX, ORGUNIT_URL_AJAX } from '../config'
+import { employe as EMPLOYE } from './employe'
 import { orgunit as ORGUNIT } from './orgunit'
 
 import Log from 'cgil-log'
@@ -167,10 +437,14 @@ export default {
     }
   },
   data: () => ({
-    show_prof_data: false,
+    message: '',
+    type_msg: 'warning',
+    show_msg: false,
+    show_prof_data: true,
+    show_comment: true,
     valid: true,
     employee: {
-      idempeditor: -1,
+      idempeditor: 10958,
       idpolitesse: null,
       issexm: -1,
       nom: '',
@@ -180,16 +454,17 @@ export default {
       adresse: null,
       codepostal: null,
       localite: null,
-      idou: 0,
-      idfonction: 0,
-      initiale: null,
+      idou: null,
+      oupath: null,
+      idfonction: null,
+      initiales: null,
       email: '',
       telprof: null,
       natel: null,
       tauxactiv: null,
       debutactiv: null,
       finactiv: null,
-      isactive: -1,
+      isactive: null,
       codezadig: null,
       loginnt: '',
       exchangelogin: null,
@@ -222,8 +497,8 @@ export default {
         const pattern = /^null|[a-zA-Zéèêëôöäàâüûîïç\s-]*$/
         return pattern.test(value) || 'Valeur invalide'
       },
-      initiale: value => {
-        const pattern = /^null|[A-Z]{2,10}$/
+      initiales: value => {
+        const pattern = /^null|[a-zA-Z]{2,10}$/
         return pattern.test(value) || 'Valeur invalide'
       },
       email: value => {
@@ -259,14 +534,35 @@ export default {
         return pattern.test(value) || 'Valeur invalide'
       }
     },
+    dateNaissanceCH: null,
+    menuDateNaissance: false,
+    dateDebutActivCH: null,
+    menuDebutActiv: false,
+    dateFinActivCH: null,
+    menuFinActiv: false,
+    initiales: null,
     orgunit: undefined,
-    orgunits: []
+    orgunits: [],
+    fonctions: []
   }),
   watch: {
+    'employee.datenaissance' (val) {
+      this.dateNaissanceCH = this.formatDate(val)
+    },
+    'employee.debutactiv' (val) {
+      this.dateDebutActivCH = this.formatDate(val)
+    },
+    'employee.finactiv' (val) {
+      this.dateFinActivCH = this.formatDate(val)
+    },
     'employee.idpolitesse': function (val) {
       if (val !== null) {
         this.employee.issexm = (val == 1) ? 1 : 0
       }
+    },
+    initiales (val) {
+      if (!val) return null
+      this.employee.initiales = val.toUpperCase()
     },
     'employee.loginnt': function (val) {
       this.employee.exchangelogin = val
@@ -275,9 +571,12 @@ export default {
   methods: {
     initialize () {
       //this.employee = Object.assign({}, EMPLOYEE_INIT)
+      //this.employee.datenaissance = '1967-02-20'
       this.orgunit = Object.assign({}, ORGUNIT_INIT)
       this.get_data_url.orgunit_url = (this.get_data_url.orgunit_url === '') ? ORGUNIT_URL_AJAX : this.get_data_url.orgunit_url
+      this.get_data_url.employee_url = (this.get_data_url.employee_url === '') ? EMP_URL_AJAX : this.get_data_url.employee_url
       this.getOUList()
+      this.getFonctionList()
     },
     validate () {
       if (this.$refs.form_data.validate()) {
@@ -288,6 +587,47 @@ export default {
       ORGUNIT.getList (this.orgunit, this.get_data_url.orgunit_url, (data) => {
         this.orgunits = data
       })
+    },
+    getFonctionList() {
+      EMPLOYE.getFonctionList (this.get_data_url.employee_url, (data) => {
+        this.fonctions = data
+      })
+    },
+    checkRights() {
+      EMPLOYE.checkRights({idempeditor: this.employee.idempeditor, idemployetoedit: this.employee.id, idou: this.employee.idou}, this.get_data_url.employee_url, (data) => {
+        log.l('## in Employe::checkRights RetCode: ', data.RetCode)
+        return (data.RetCode != 0)
+      })
+    },
+    save() {
+      if (!this.$refs.form_data.validate()) {
+        this.show_prof_data = true
+        this.show_comment = true
+        this.message = 'Veuillez corriger les champs invalides avant de pouvoir sauver!'
+        this.show_msg = true
+      }
+      else {
+        if (checkRights()) {
+          EMPLOYE.save(this.employee, this.get_data_url.employee_url, (data) => {
+            alert('save: RetCode=' + data.RetCode)
+          })
+        } else {
+          this.message = 'Vous n\'avez pas le droit de créer cet employé!'
+          this.show_msg = true
+        }
+      }
+    },
+    formatDate (date) {
+      if (!date) return null
+
+      const [year, month, day] = date.split('-')
+      return `${day}.${month}.${year}`
+    },
+    parseDate (date) {
+      if (!date) return null
+
+      const [day, month, year] = date.split('.')
+      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
     }
   },
   created () {
