@@ -308,11 +308,26 @@
 
         <v-flex xs12 sm4 md4> 
           <v-text-field
-            v-model="employee.idmanager"
-            counter="30"
+            v-model="manager"
             :label="$t('userInterface.Manager')"
-            clearable
-          ></v-text-field>
+            readonly
+          >
+            <template v-slot:append>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <employe-search
+                    :multi="false"
+                    :json="true"
+                    :get_data_url="get_data_url.employe_search_url"
+                    @selection_ready="setManager"
+                  >
+                    <v-icon v-on="on">perm-identity</v-icon>
+                  </employe-search>
+                </template>
+                {{$t('userInterface.SearchEmployee')}}
+              </v-tooltip>
+            </template>
+          </v-text-field>
         </v-flex>
       </v-layout>
 
@@ -375,21 +390,6 @@
         </v-flex>
       </v-layout>
 
-<!--
-      <v-layout wrap>
-        <v-dialog
-          v-model="show_msg"
-          max-width="500"
-        >
-          <v-alert
-            type="warning"
-            icon="error"
-          >
-            {{message}}
-          </v-alert>
-        </v-dialog>
-      </v-layout>
--->      
       <v-dialog
         ref="message"
         v-model="show_msg"
@@ -418,14 +418,18 @@ import { EMP_URL_AJAX, ORGUNIT_URL_AJAX } from '../config'
 import { employe as EMPLOYE } from './employe'
 import { orgunit as ORGUNIT } from './orgunit'
 
+import EmployeSearch from 'mp-vue-employe-search'
 import Log from 'cgil-log'
 import jsonpath from 'jsonpath'
 
-const MODULE_NAME = 'EmployeSearch.vue'
+const MODULE_NAME = 'Employe.vue'
 const log = (DEV) ? new Log(MODULE_NAME, 4) : new Log(MODULE_NAME, 2)
 
 export default {
   name: 'Employe',
+  components: {
+    'employe-search': EmployeSearch
+  },
   props: {
     get_data_url: {
       type: Object,
@@ -541,6 +545,7 @@ export default {
     dateFinActivCH: null,
     menuFinActiv: false,
     initiales: null,
+    manager: '',
     orgunit: undefined,
     orgunits: [],
     fonctions: []
@@ -592,6 +597,10 @@ export default {
       EMPLOYE.getFonctionList (this.get_data_url.employee_url, (data) => {
         this.fonctions = data
       })
+    },
+    setManager(manager, length) {
+      let __manager = (length == 1) ? manager : manager[0]
+      this.manager = __manager.nom + ' ' + __manager.prenom
     },
     checkRights() {
       EMPLOYE.checkRights({idempeditor: this.employee.idempeditor, idemployetoedit: this.employee.id, idou: this.employee.idou}, this.get_data_url.employee_url, (data) => {
