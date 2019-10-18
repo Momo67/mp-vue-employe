@@ -11,6 +11,7 @@
   "dependencies": {
     "cgil-log": "^1.0.5",
     "core-js": "^2.6.5",
+    "mp-vue-employe-search": "^2.1.2",
     "vue": "^2.6.10",
     "vue-i18n": "^8.0.0",
     "vuetify": "^2.1.0"
