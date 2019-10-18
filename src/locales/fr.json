@@ -1,8 +1,6 @@
 {
   "fr": {
     "userInterface": {
-      "searchEmp": "Sélection d'un employé | Sélection d'employés",
-      "noResult": "Désolé, il n'y a aucun employé correspondant à votre recherche!",
       "alertMsg": "Vous devez entrer au moins un critère!",
       "searchBtn": "Rechercher",
       "search": "Recherche...",
@@ -11,16 +9,39 @@
       "displayListBtn": "Afficher / masquer la liste des résultats",
       "displayCriterionBtn": "Afficher / masquer les critères de sélection",
       "resetBtn": "Cliquer pour réinitialiser",
-      "orgUnit": "Unité organisationnelle",
-      "searchHint": "Entrer un caractère pour commencer la recherche",
-      "lastName": "Nom",
-      "firstName": "Prénom",
+      "Fonction": "Fonction",
+      "SearchHint": "Entrer un caractère pour commencer la recherche",
       "yes": "oui",
       "no": "non",
       "displayNonActive": "Afficher les employés désactivés",
       "noDataText": "Aucune donnée disponible",
+      "Courtesy": "Politesse",
+      "LastName": "Nom",
+      "FirstName": "Prénom",
+      "Birthdate": "Date de naissance",
+      "PrivatePhone": "Téléphone privé",
+      "Address": "Adresse",
+      "PostalCode": "Code postal",
+      "Locality": "Localité",
       "showProfData": "Afficher les données professionnelles",
-      "hideProfData": "Cacher les données professionnelles"
+      "OrgUnit": "Unité organisationnelle",
+      "Function": "Fonction",
+      "Initials": "Initiales",
+      "Email": "Email",
+      "ProfPhone": "Téléphone professionnel",
+      "Natel": "Natel",
+      "OccupancyRate": "Taux d'occupation",
+      "ActivityStart": "Début d'activité",
+      "ActivityEnd": "Fin d'activité",
+      "Active": "Actif",
+      "CodeZadig": "Numéro personnel",
+      "LoginNT": "Login NT",
+      "ExchangeLogin": "Exchange login",
+      "Manager": "Manager",
+      "Comment": "Commentaire",
+      "hideProfData": "Cacher les données professionnelles",
+      "showComment":"Afficher le commentaire",
+      "hideComment": "Cacher le commentaire"
     }
   }
 }

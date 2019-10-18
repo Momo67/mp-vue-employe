@@ -1,8 +1,6 @@
 {
   "en": {
     "userInterface": {
-      "searchEmp": "Selection of an employee | Selection of employees",
-      "noResult": "Sorry, there are no employees matching your search!",
       "alertMsg": "You must enter at least one criterion!",
       "searchBtn": "Search",
       "search": "Search...",
@@ -11,17 +9,39 @@
       "displayListBtn": "Show / hide list of results",
       "displayCriterionBtn": "Show / hide selection criterions",
       "resetBtn": "Click to reset",
-      "orgUnit": "Organizational unit",
-      "searchHint": "Enter a character to start the search",
-      "lastName": "Last Name",
-      "firstName": "First name",
+      "Fonction": "Fonction",
+      "SearchHint": "Enter a character to start the search",
       "yes": "yes",
       "no": "no",
       "displayNonActive": "Show disabled employees",
       "noDataText": "No data available",
+      "Courtesy": "Courtesy",
+      "LastName": "Name",
+      "FirstName": "First name",
+      "Birthdate": "Birthdate",
+      "PrivatePhone": "Private phone",
+      "Address": "Address",
+      "PostalCode": "Postal code",
+      "Locality": "Locality",
       "showProfData": "Show professional data",
-      "hideProfData": "Hide professional data"
-
+      "Function": "",
+      "OrgUnit": "Organizational unit",
+      "Initials": "Initials",
+      "Email": "Email",
+      "ProfPhone": "Profesional phone",
+      "Natel": "Natel",
+      "OccupancyRate": "Occupancy rate",
+      "ActivityStart": "Start of activity",
+      "ActivityEnd": "End of activity",
+      "Active": "Active",
+      "CodeZadig": "Peronal number",
+      "LoginNT": "Login NT",
+      "ExchangeLogin": "Exchange login",
+      "Manager": "Manager",
+      "Comment": "Comment",
+      "hideProfData": "Hide professional data",
+      "showComment": "Show comment",
+      "hideComment": "Hide comment"
     }
   }
 }
