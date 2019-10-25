@@ -1,17 +1,18 @@
 {
   "name": "mp-vue-employe",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build-lib": "vue-cli-service build --target lib --mode development --name Employe ./src/components/Employe.vue",
+    "build-wc": "vue-cli-service build --target wc --mode development --name employe ./src/components/Employe.vue",
     "lint": "vue-cli-service lint",
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'"
   },
   "dependencies": {
     "cgil-log": "^1.0.5",
     "core-js": "^2.6.5",
-    "mp-vue-employe-search": "^2.1.2",
+    "mp-vue-employe-search": "^3.0.0",
     "vue": "^2.6.10",
     "vue-i18n": "^8.0.0",
     "vuetify": "^2.1.0"
@@ -35,5 +36,12 @@
     "vue-cli-plugin-vuetify": "^1.0.0",
     "vue-template-compiler": "^2.6.10",
     "vuetify-loader": "^1.2.2"
+  },
+  "homepage": "https://github.com/Momo67/mp-vue-employe#readme",
+  "license": "MIT",
+  "main": "dist/Employe.umd.min.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Momo67/mp-vue-employe.git"
   }
 }
