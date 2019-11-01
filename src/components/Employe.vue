@@ -299,7 +299,7 @@
             :rules="[rules.required]"
             item-text="etat"
             item-value="id"
-            :items="[{id: 1, etat:'oui'}, {id: 0, etat:'non'}]"
+            :items="[{id: 1, etat:'oui'}, {id: -1, etat:'non'}]"
             :label="$t('userInterface.Active')"
             required
             clearable
@@ -313,19 +313,17 @@
             readonly
           >
             <template v-slot:append>
-              <v-tooltip bottom>
+              <employe-search id="employe-search"
+                :fullscreen="false"
+                :multi="false"
+                :json="true"
+                :get_data_url="get_data_url"
+                @selection_ready="setManager"
+              >
                 <template v-slot:activator="{ on }">
-                  <employe-search
-                    :multi="false"
-                    :json="true"
-                    :get_data_url="get_data_url.employe_search_url"
-                    @selection_ready="setManager"
-                  >
-                    <v-icon v-on="on">perm-identity</v-icon>
-                  </employe-search>
+                    <v-icon v-on="on">mdi-account</v-icon>
                 </template>
-                {{$t('userInterface.SearchEmployee')}}
-              </v-tooltip>
+              </employe-search>
             </template>
           </v-text-field>
         </v-flex>
@@ -366,6 +364,14 @@
         </v-flex>
         <v-flex xs2 align-content-center>
           <v-btn
+            color="info"
+            @click="setVal"
+          >
+            Initialize
+          </v-btn>
+        </v-flex>
+        <v-flex xs2 align-content-center>
+          <v-btn
             :disabled="!valid"
             color="success"
             @click="validate"
@@ -398,10 +404,15 @@
         hide-overlay
       >
         <v-alert
+          v-model="show_msg"
           :type="type_msg"
-          icon="error"
+          prominent
+          dismissible
+          class="alert"
         >
-          {{message}}
+          <template v-slot:default>
+            <div v-html="message"></div>
+          </template>
         </v-alert>
       </v-dialog>
     </v-container>
@@ -417,10 +428,10 @@ import { DEV, ORGUNIT_INIT, EMPLOYEE_INIT } from '../config'
 import { EMP_URL_AJAX, ORGUNIT_URL_AJAX } from '../config'
 import { employe as EMPLOYE } from './employe'
 import { orgunit as ORGUNIT } from './orgunit'
+import { msg_level as MSG_LEVEL } from './employe'
 
 import EmployeSearch from 'mp-vue-employe-search'
 import Log from 'cgil-log'
-import jsonpath from 'jsonpath'
 
 const MODULE_NAME = 'Employe.vue'
 const log = (DEV) ? new Log(MODULE_NAME, 4) : new Log(MODULE_NAME, 2)
@@ -442,12 +453,14 @@ export default {
   },
   data: () => ({
     message: '',
+    //msg_level : {error: 'error', warning: 'warning', info: 'info', success: 'success'},
     type_msg: 'warning',
     show_msg: false,
     show_prof_data: true,
     show_comment: true,
     valid: true,
     employee: {
+      idemploye: 0,
       idempeditor: 10958,
       idpolitesse: null,
       issexm: -1,
@@ -482,27 +495,27 @@ export default {
         return pattern.test(value) || 'Valeur invalide'
       },
       date: value => {
-        const pattern = /^null|\d{2}\.\d{2}\.\d{4}$/
+        const pattern = /null|^\d{2}\.\d{2}\.\d{4}$/
         return pattern.test(value) || 'Valeur invalide'
       },
       telprive: value => {
-        const pattern = /^null|0\d{2}\s\d{3}\s\d{2}\s\d{2}$/
+        const pattern = /null|^((01|0\d{2})\s[1-9][0-9]{2}\s[0-9]{2}\s[0-9]{2})$/
         return pattern.test(value) || 'Valeur invalide'
       },
       adresse: value => {
-        const pattern = /^null|[a-zA-Z\s.-]*$/
+        const pattern = /null|^[a-zA-Z0-9\s.-]*$/
         return pattern.test(value) || 'Valeur invalide'
       },
       codepostal: value => {
-        const pattern = /^null|[1-9][0-9]{3}$/
+        const pattern = /null|^[1-9][0-9]{3}$/
         return pattern.test(value) || 'Valeur invalide'
       },
       localite: value => {
-        const pattern = /^null|[a-zA-Zéèêëôöäàâüûîïç\s-]*$/
+        const pattern = /null|^[a-zA-Zéèêëôöäàâüûîïç\s-]*$/
         return pattern.test(value) || 'Valeur invalide'
       },
       initiales: value => {
-        const pattern = /^null|[a-zA-Z]{2,10}$/
+        const pattern = /null|^[a-zA-Z]{2,10}$/
         return pattern.test(value) || 'Valeur invalide'
       },
       email: value => {
@@ -510,31 +523,35 @@ export default {
         return pattern.test(value) || 'Valeur invalide'
       },
       telprof: value => {
-        const pattern = /^null|(([0-9]{2}\s*[0-9]{2})|((01|0\d{2})\s*[0-9][0-9]{2}\s*[0-9]{2}\s*[0-9]{2}))$/
+        const pattern = /null|^(([1-9]{2}\s[0-9]{2})|((01|0\d{2})\s[1-9][0-9]{2}\s[0-9]{2}\s[0-9]{2}))$/
         return pattern.test(value) || 'Valeur invalide'
       },
       natel: value => {
-        const pattern = /^null|07[6789]\s*[1-9][0-9]{2}\s*[0-9]{2}\s*[0-9]{2}$/
+        const pattern = /null|^07[6789]\s*[1-9][0-9]{2}\s*[0-9]{2}\s*[0-9]{2}$/
         return pattern.test(value) || 'Valeur invalide'
       },
       tauxactiv: value => {
-        const pattern = /^null|((100)|(\d{1,2}))$/
+        const pattern = /null|^((100)|(\d{1,2}))$/
         return pattern.test(value) || 'Valeur invalide'
       },
       codezadig: value => {
-        const pattern = /^null|\d*$/
+        const pattern = /null|^\d*$/
         return pattern.test(value) || 'Valeur invalide'
       },
       loginnt: value => {
         const pattern = /^[a-zA-Z_*]{1,5}\d*\*?$/
         return pattern.test(value) || 'Valeur invalide'
       },
+      isactive: value => {
+        const pattern = /^[01]$/
+        return pattern.test(value) || 'Valeur invalide'
+      },
       commentaire: value => {
-        const pattern = /^null|[0-9a-zA-Zéèêëôöäàâüûîïç\s-]*$/
+        const pattern = /null|^[0-9a-zA-Zéèêëôöäàâüûîïç'"\s-]*$/
         return pattern.test(value) || 'Valeur invalide'
       },
       id: value => {
-        const pattern = /^null|[\d]+$/
+        const pattern = /null|^[\d]+$/
         return pattern.test(value) || 'Valeur invalide'
       }
     },
@@ -574,9 +591,15 @@ export default {
     }
   },
   methods: {
+    setVal () {
+      this.employee.isactive = 1
+      this.employee.idou = 153
+      this.employee.idfonction = 26
+      this.employee.datenaissance = '1967-02-20'
+      this.getEmpName(10958)
+    },
     initialize () {
       //this.employee = Object.assign({}, EMPLOYEE_INIT)
-      //this.employee.datenaissance = '1967-02-20'
       this.orgunit = Object.assign({}, ORGUNIT_INIT)
       this.get_data_url.orgunit_url = (this.get_data_url.orgunit_url === '') ? ORGUNIT_URL_AJAX : this.get_data_url.orgunit_url
       this.get_data_url.employee_url = (this.get_data_url.employee_url === '') ? EMP_URL_AJAX : this.get_data_url.employee_url
@@ -598,12 +621,20 @@ export default {
         this.fonctions = data
       })
     },
-    setManager(manager, length) {
-      let __manager = (length == 1) ? manager : manager[0]
-      this.manager = __manager.nom + ' ' + __manager.prenom
+    setManager(manager) {
+      if (JSON.parse(manager).length != 0) {
+        let __manager = JSON.parse(manager)
+        this.manager = __manager[0].nom + ' ' + __manager[0].prenom
+        this.employee.idmanager = __manager[0].idemploye
+      }
+    },
+    getEmpName (idemploye) {
+      EMPLOYE.getEmpName(idemploye, this.get_data_url.employee_url, (data) => {
+        this.manager = data[0].Nom + ' ' + data[0].Prenom
+      })
     },
     checkRights() {
-      EMPLOYE.checkRights({idempeditor: this.employee.idempeditor, idemployetoedit: this.employee.id, idou: this.employee.idou}, this.get_data_url.employee_url, (data) => {
+      EMPLOYE.checkRights({idempeditor: this.employee.idempeditor, idemployetoedit: this.employee.idemploye, idou: this.employee.idou}, this.get_data_url.employee_url, (data) => {
         log.l('## in Employe::checkRights RetCode: ', data.RetCode)
         return (data.RetCode != 0)
       })
@@ -612,17 +643,22 @@ export default {
       if (!this.$refs.form_data.validate()) {
         this.show_prof_data = true
         this.show_comment = true
-        this.message = 'Veuillez corriger les champs invalides avant de pouvoir sauver!'
-        this.show_msg = true
+        this.displayMessage('Veuillez corriger les champs invalides avant de pouvoir sauver!', MSG_LEVEL.WARNING)
       }
       else {
-        if (checkRights()) {
+        if (this.checkRights() !== 0) {
           EMPLOYE.save(this.employee, this.get_data_url.employee_url, (data) => {
-            alert('save: RetCode=' + data.RetCode)
+            if (data.error) {
+              this.displayMessage(`<div>Une erreur s'est produite pendant la sauvegarde!</div><div>${data.error.reason}</div>`, MSG_LEVEL.ERROR)
+            } else {
+              if (data.success) {
+                this.employee.idemploye = parseInt(data.success.retval.idemploye)
+                this.displayMessage(`<div>Sauvegarde réussie!</div><div>idemploye: ${data.success.retval.idemploye}</div>`, MSG_LEVEL.SUCCESS)
+              }
+            }
           })
         } else {
-          this.message = 'Vous n\'avez pas le droit de créer cet employé!'
-          this.show_msg = true
+          this.displayMessage('Vous n\'avez pas le droit de créer cet employé!', MSG_LEVEL.WARNING)
         }
       }
     },
@@ -637,6 +673,11 @@ export default {
 
       const [day, month, year] = date.split('.')
       return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+    },
+    displayMessage (message, level) {
+      this.message = message
+      this.type_msg = level
+      this.show_msg = true
     }
   },
   created () {
@@ -644,6 +685,23 @@ export default {
   }
 }
 </script>
+
+<style lang="css" scoped>
+.container {
+  padding: 1px;
+}
+.alert {
+  margin-bottom: 0px;
+}
+</style>
+<style lang="css">
+.expanded {
+  background: white;
+}
+.container {
+  padding: 1px;
+}
+</style>
 
 <i18n src="../locales/fr.json"></i18n>
 <i18n src="../locales/en.json"></i18n>

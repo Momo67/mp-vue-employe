@@ -44,8 +44,8 @@ class Employe {
       __data.forEach(function (employee) {
         for (var prop in employee) {
           employee[prop.toLowerCase()] = employee[prop]
-          if (typeof employee['prenom'] === 'object')
-            employee['prenom'] = ''
+          if (typeof employee.prenom === 'object')
+            employee.prenom = ''
           delete employee[prop]
         }
       })
@@ -64,6 +64,27 @@ class Employe {
     })
   }
 
+  getEmpName(idemploye, get_data_url, callback) {
+    let __fetch_url = `${get_data_url}/employe_get_name.php`
+    axios.post(__fetch_url, {
+      idemploye: idemploye
+    }).then(response => {
+      let __retval = response.data
+      callback(__retval)
+
+      log.l('## in Employe::getEmpName retval: ', __retval)
+    }).catch(error => {
+      if (error.response) {
+        log.e(`## in Employe::getEmpName Error data: ${error.response.data}, status: ${error.response.status}, headers: ${error.response.headers}`)
+      } else if (error.request) {
+        log.e(`## in Employe::getEmpName Error request: `, error.request)
+      } else {
+        log.e(`## in Employe::getEmpName Error: `, error.message)
+      }
+      log.e(`## in Employe::getEmpName Error: `, error.config)
+    })
+  }
+
   getFonctionList(get_data_url, callback) {
     let __fetch_url = `${get_data_url}/employe_get_fonction.php`
     axios.post(__fetch_url, {}).then(response => {
@@ -79,6 +100,10 @@ class Employe {
         }
         // names must be equal
         return 0;
+      })
+
+      __data.forEach(function (fonction) {
+          fonction.Id = parseInt(fonction.Id)
       })
 
       callback(__data)
@@ -118,9 +143,9 @@ class Employe {
   }
 
   save(employee, get_data_url, callback) {
-    let __fetch_url = `${get_data_url}/employe_checkrights.php`
+    let __fetch_url = `${get_data_url}/employe_save.php`
     axios.post(__fetch_url, {
-      params: employee
+      employee: employee
     }).then(response => {
       let __retval = response.data
       callback(__retval)
@@ -137,6 +162,13 @@ class Employe {
       log.e(`## in Employe::save Error: `, error.config)
     })
   }
+}
+
+export const msg_level = {
+  ERROR: 'error',
+  WARNING: 'warning',
+  INFO: 'info',
+  SUCCESS: 'success'
 }
 
 export const employe = new Employe()

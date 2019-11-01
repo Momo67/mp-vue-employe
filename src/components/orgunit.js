@@ -39,6 +39,10 @@ class OrgUnit {
         return 0;
       })
 
+      __data.forEach(element => {
+          element.IdOrgUnit = parseInt(element.IdOrgUnit)
+      })
+
       callback(__data)
 
       log.l('## in OrgUnit::getList orgunits: ', __data)
