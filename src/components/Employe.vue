@@ -225,12 +225,14 @@
             <template v-slot:activator="{ on }">
               <v-text-field
                 v-model="dateDebutActivCH"
+                :rules="[rules.date]"
                 :label="$t('userInterface.ActivityStart')"
                 hint="jj.mm.aaaa"
                 persistent-hint
                 @blur="employee.debutactiv = parseDate(dateDebutActivCH)"
                 v-on="on"
                 clearable
+                :error="validateDebutActiv"
               ></v-text-field>
             </template>
             <v-date-picker v-model="employee.debutactiv" @input="menuDebutActiv = false" :first-day-of-week="1" locale="fr"></v-date-picker>
@@ -251,12 +253,14 @@
             <template v-slot:activator="{ on }">
               <v-text-field
                 v-model="dateFinActivCH"
+                :rules="[rules.date]"
                 :label="$t('userInterface.ActivityEnd')"
                 hint="jj.mm.aaaa"
                 persistent-hint
                 @blur="employee.finactiv = parseDate(dateFinActivCH)"
                 v-on="on"
                 clearable
+                :error="validateFinActiv"
               ></v-text-field>
             </template>
             <v-date-picker v-model="employee.finactiv" @input="menuFinActiv = false" :first-day-of-week="1" locale="fr"></v-date-picker>
@@ -495,7 +499,7 @@ export default {
         return pattern.test(value) || 'Valeur invalide'
       },
       date: value => {
-        const pattern = /null|^\d{2}\.\d{2}\.\d{4}$/
+        const pattern = /null|^\d{2}\.\d{2}\.(19|20)\d{2}$/
         return pattern.test(value) || 'Valeur invalide'
       },
       telprive: value => {
@@ -558,8 +562,10 @@ export default {
     dateNaissanceCH: null,
     menuDateNaissance: false,
     dateDebutActivCH: null,
+    validateDebutActiv: false,
     menuDebutActiv: false,
     dateFinActivCH: null,
+    validateFinActiv: false,
     menuFinActiv: false,
     initiales: null,
     manager: '',
@@ -573,9 +579,25 @@ export default {
     },
     'employee.debutactiv' (val) {
       this.dateDebutActivCH = this.formatDate(val)
+      if ((val.length == 10) && (this.employee.finactiv !== null) && (this.employee.finactiv.length == 10) && (val > this.employee.debutactiv)) {
+        this.displayMessage('La date de fin d\'activité doit se situer après la date de début d\'activité...', MSG_LEVEL.WARNING)
+      }
+    },
+    dateDebutActivCH (val) {
+      if (val.length == 10) {
+        this.employee.debutactiv = this.parseDate(val)
+      }
     },
     'employee.finactiv' (val) {
       this.dateFinActivCH = this.formatDate(val)
+      if ((val.length == 10) && (this.employee.debutactiv !== null) && (this.employee.debutactiv.length == 10) && (val < this.employee.debutactiv)) {
+        this.displayMessage('La date de fin d\'activité doit se situer après la date de début d\'activité...', MSG_LEVEL.WARNING)
+      }
+    },
+    dateFinActivCH (val) {
+      if (val.length == 10) {
+        this.employee.finactiv = this.parseDate(val)
+      }
     },
     'employee.idpolitesse': function (val) {
       if (val !== null) {
@@ -609,6 +631,11 @@ export default {
     validate () {
       if (this.$refs.form_data.validate()) {
         this.snackbar = true
+      }
+      if (this.employee.finactiv < this.employee.debutactiv) {
+        this.validateDebutActiv = true
+        this.validateFinActiv = true
+        this.displayMessage('La date de fin d\'activité doit se situer après la date de début d\'activité...', MSG_LEVEL.WARNING)
       }
     },
     getOUList() {
