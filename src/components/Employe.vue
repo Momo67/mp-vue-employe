@@ -53,10 +53,12 @@
             <template v-slot:activator="{ on }">
               <v-text-field
                 v-model="dateNaissanceCH"
+                :rules="[rules.date]"
                 :label="$t('userInterface.Birthdate')"
                 hint="jj.mm.aaaa"
                 @blur="employee.datenaissance = parseDate(dateNaissanceCH)"
                 v-on="on"
+                v-mask="'##.##.####'"
                 clearable
               ></v-text-field>
             </template>
@@ -76,6 +78,7 @@
             :rules="[rules.telprive]"
             :label="$t('userInterface.PrivatePhone')"
             hint="0xx xxx xx xx"
+            v-mask="'### ### ## ##'"
             clearable
           ></v-text-field>
         </v-flex>
@@ -161,7 +164,7 @@
 
         <v-flex xs12 sm4 md4> 
           <v-text-field
-            v-model="initiales"
+            v-model="employee.initiales"
             :rules="[rules.initiales]"
             :label="$t('userInterface.Initials')"
             counter="10"
@@ -186,6 +189,7 @@
             :rules="[rules.telprof]"
             :label="$t('userInterface.ProfPhone')"
             hint="xx xx ou 0xx xxx xx xx"
+            v-mask="['## ##', '### ### ## ##']"
             clearable
           ></v-text-field>
         </v-flex>
@@ -196,6 +200,7 @@
             :rules="[rules.natel]"
             :label="$t('userInterface.Natel')"
             hint="07x xxx xx xx"
+            v-mask="'### ### ## ##'"
             clearable
           ></v-text-field>
         </v-flex>
@@ -232,6 +237,7 @@
                 @blur="employee.debutactiv = parseDate(dateDebutActivCH)"
                 v-on="on"
                 clearable
+                v-mask="'##.##.####'"
                 :error="validateDebutActiv"
               ></v-text-field>
             </template>
@@ -260,6 +266,7 @@
                 @blur="employee.finactiv = parseDate(dateFinActivCH)"
                 v-on="on"
                 clearable
+                v-mask="'##.##.####'"
                 :error="validateFinActiv"
               ></v-text-field>
             </template>
@@ -436,6 +443,7 @@ import { msg_level as MSG_LEVEL } from './employe'
 
 import EmployeSearch from 'mp-vue-employe-search'
 import Log from 'cgil-log'
+import {mask} from 'vue-the-mask'
 
 const MODULE_NAME = 'Employe.vue'
 const log = (DEV) ? new Log(MODULE_NAME, 4) : new Log(MODULE_NAME, 2)
@@ -445,6 +453,7 @@ export default {
   components: {
     'employe-search': EmployeSearch
   },
+  directives: {mask},
   props: {
     get_data_url: {
       type: Object,
@@ -487,7 +496,7 @@ export default {
       finactiv: null,
       isactive: null,
       codezadig: null,
-      loginnt: '',
+      loginnt: 'LAUSANNE_CH\\',
       exchangelogin: null,
       idmanager: null,
       commentaire: null
@@ -543,7 +552,7 @@ export default {
         return pattern.test(value) || 'Valeur invalide'
       },
       loginnt: value => {
-        const pattern = /^[a-zA-Z_*]{1,5}\d*\*?$/
+        const pattern = /^(LAUSANNE_CH\\[a-zA-Z_*]{1,5}|[a-zA-Z_*]{1,5})\d*\*?$/
         return pattern.test(value) || 'Valeur invalide'
       },
       isactive: value => {
@@ -577,25 +586,40 @@ export default {
     'employee.datenaissance' (val) {
       this.dateNaissanceCH = this.formatDate(val)
     },
+    dateNaissanceCH (val) {
+      if ((val !== null) && (val.length == 10)) {
+        this.employee.datenaissance = this.parseDate(val)
+      }
+    },
     'employee.debutactiv' (val) {
       this.dateDebutActivCH = this.formatDate(val)
-      if ((val.length == 10) && (this.employee.finactiv !== null) && (this.employee.finactiv.length == 10) && (val > this.employee.debutactiv)) {
+      if ((val !== null) && (val.length == 10) && (this.employee.finactiv !== null) && (this.employee.finactiv.length == 10) && (val > this.employee.debutactiv)) {
+        this.validateDebutActiv = true
+        this.validateFinActiv = true
         this.displayMessage('La date de fin d\'activité doit se situer après la date de début d\'activité...', MSG_LEVEL.WARNING)
+      } else {
+        this.validateDebutActiv = false
+        this.validateFinActiv = false
       }
     },
     dateDebutActivCH (val) {
-      if (val.length == 10) {
+      if ((val !== null) && (val.length == 10)) {
         this.employee.debutactiv = this.parseDate(val)
       }
     },
     'employee.finactiv' (val) {
       this.dateFinActivCH = this.formatDate(val)
-      if ((val.length == 10) && (this.employee.debutactiv !== null) && (this.employee.debutactiv.length == 10) && (val < this.employee.debutactiv)) {
+      if ((val !== null) && (val.length === 10) && (this.employee.debutactiv !== null) && (this.employee.debutactiv.length == 10) && (val < this.employee.debutactiv)) {
+        this.validateDebutActiv = true
+        this.validateFinActiv = true
         this.displayMessage('La date de fin d\'activité doit se situer après la date de début d\'activité...', MSG_LEVEL.WARNING)
+      } else {
+        this.validateDebutActiv = false
+        this.validateFinActiv = false
       }
     },
     dateFinActivCH (val) {
-      if (val.length == 10) {
+      if ((val !== null) && (val.length == 10)) {
         this.employee.finactiv = this.parseDate(val)
       }
     },
@@ -604,11 +628,13 @@ export default {
         this.employee.issexm = (val == 1) ? 1 : 0
       }
     },
-    initiales (val) {
+    'employee.initiales' (val) {
       if (!val) return null
       this.employee.initiales = val.toUpperCase()
     },
     'employee.loginnt': function (val) {
+      if (!val) return null
+      this.employee.loginnt = val.toUpperCase()
       this.employee.exchangelogin = val
     }
   },
