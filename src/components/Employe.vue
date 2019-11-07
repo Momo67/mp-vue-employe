@@ -10,7 +10,7 @@
             :rules="[rules.required]"
             item-text="politesse"
             item-value="id"
-            :items="[{id: 1, politesse:'Monsieur'}, {id: 2, politesse:'Madame'}]"
+            :items="[{id: '1', politesse:'Monsieur'}, {id: '2', politesse:'Madame'}]"
             :label="$t('userInterface.Courtesy')"
             required
             clearable
@@ -87,8 +87,8 @@
 
         <v-flex xs12 sm4 md4> 
           <v-text-field
-            v-model="employee.adresse"
-            :rules="[rules.adresse]"
+            v-model="employee.addresse"
+            :rules="[rules.addresse]"
             :label="$t('userInterface.Address')"
             counter="50"
             clearable
@@ -310,7 +310,7 @@
             :rules="[rules.required]"
             item-text="etat"
             item-value="id"
-            :items="[{id: 1, etat:'oui'}, {id: -1, etat:'non'}]"
+            :items="[{id: '1', etat:'oui'}, {id: '-1', etat:'non'}]"
             :label="$t('userInterface.Active')"
             required
             clearable
@@ -455,13 +455,18 @@ export default {
   },
   directives: {mask},
   props: {
+    value: {
+      type: Number,
+      default: 0,
+      required: true
+    },
     get_data_url: {
       type: Object,
       default: () => ({
           orgunit_url: '',
           employee_url: ''
       }),
-      require: false
+      required: false
     }
   },
   data: () => ({
@@ -474,14 +479,13 @@ export default {
     valid: true,
     employee: {
       idemploye: 0,
-      idempeditor: 10958,
       idpolitesse: null,
       issexm: -1,
       nom: '',
       prenom: '',
       datenaissance: null,
       telprive: null,
-      adresse: null,
+      addresse: null,
       codepostal: null,
       localite: null,
       idou: null,
@@ -504,7 +508,7 @@ export default {
     rules: {
       required: value => !!value || 'Champ obligatoire.',
       nomprenom: value => {
-        const pattern = /^[a-zA-Z\s-]*$/
+        const pattern = /^[a-zA-Zéèêëôöäàâüûîïç\s-]*$/
         return pattern.test(value) || 'Valeur invalide'
       },
       date: value => {
@@ -515,7 +519,7 @@ export default {
         const pattern = /null|^((01|0\d{2})\s[1-9][0-9]{2}\s[0-9]{2}\s[0-9]{2})$/
         return pattern.test(value) || 'Valeur invalide'
       },
-      adresse: value => {
+      addresse: value => {
         const pattern = /null|^[a-zA-Z0-9\s.-]*$/
         return pattern.test(value) || 'Valeur invalide'
       },
@@ -644,7 +648,7 @@ export default {
       this.employee.idou = 153
       this.employee.idfonction = 26
       this.employee.datenaissance = '1967-02-20'
-      this.getEmpName(10958)
+      this.getManagerName(10958)
     },
     initialize () {
       //this.employee = Object.assign({}, EMPLOYEE_INIT)
@@ -681,7 +685,13 @@ export default {
         this.employee.idmanager = __manager[0].idemploye
       }
     },
-    getEmpName (idemploye) {
+    getEmpData(idemploye) {
+      EMPLOYE.getEmpData(idemploye, this.get_data_url.employee_url, (data) => {
+        this.employee = {...data}
+        this.getManagerName(this.employee.idmanager)
+      })
+    },
+    getManagerName (idemploye) {
       EMPLOYE.getEmpName(idemploye, this.get_data_url.employee_url, (data) => {
         this.manager = data[0].Nom + ' ' + data[0].Prenom
       })
@@ -699,26 +709,25 @@ export default {
         this.displayMessage('Veuillez corriger les champs invalides avant de pouvoir sauver!', MSG_LEVEL.WARNING)
       }
       else {
-        if (this.checkRights() !== 0) {
-          EMPLOYE.save(this.employee, this.get_data_url.employee_url, (data) => {
-            if (data.error) {
-              this.displayMessage(`<div>Une erreur s'est produite pendant la sauvegarde!</div><div>${data.error.reason}</div>`, MSG_LEVEL.ERROR)
-            } else {
-              if (data.success) {
-                this.employee.idemploye = parseInt(data.success.retval.idemploye)
-                this.displayMessage(`<div>Sauvegarde réussie!</div><div>idemploye: ${data.success.retval.idemploye}</div>`, MSG_LEVEL.SUCCESS)
-              }
+        EMPLOYE.save(this.employee, this.get_data_url.employee_url, (data) => {
+          if (data.error) {
+            this.displayMessage(`<div>Une erreur s'est produite pendant la sauvegarde!</div><div>${data.error.reason}</div>`, MSG_LEVEL.ERROR)
+          } else {
+            if (data.success) {
+              this.employee.idemploye = parseInt(data.success.retval.idemploye)
+              this.$emit('input', this.employee.idemploye)
+              this.$emit('done', this.employee.idemploye)
+              this.displayMessage(`<div>Sauvegarde réussie!</div><div>idemploye: ${data.success.retval.idemploye}</div>`, MSG_LEVEL.SUCCESS)
             }
-          })
-        } else {
-          this.displayMessage('Vous n\'avez pas le droit de créer cet employé!', MSG_LEVEL.WARNING)
-        }
+          }
+        })
       }
     },
     formatDate (date) {
       if (!date) return null
 
-      const [year, month, day] = date.split('-')
+      let __date = date.substring(0, 10)
+      const [year, month, day] = __date.split('-')
       return `${day}.${month}.${year}`
     },
     parseDate (date) {
@@ -735,6 +744,13 @@ export default {
   },
   created () {
     this.initialize()
+  },
+  mounted () {
+    //this.employee.idemploye = this.value
+    if (this.value === 0)
+      this.employee = Object.assign({}, EMPLOYEE_INIT)
+    else
+      this.getEmpData(this.value)
   }
 }
 </script>

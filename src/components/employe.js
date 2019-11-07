@@ -64,6 +64,33 @@ class Employe {
     })
   }
 
+  getEmpData(idemploye, get_data_url, callback)
+  {
+    let __fetch_url = `${get_data_url}/employe_get_data.php`
+    axios.post(__fetch_url, {
+      idemploye: idemploye
+    }).then(response => {
+      let __data = response.data[0]
+
+      for (let [key, value] of Object.entries(__data)) {
+        if (value === '')
+          __data[key] = null
+      }
+      callback(__data)
+
+      log.l('## in Employe::getEmpData data: ', __data)
+    }).catch(error => {
+      if (error.response) {
+        log.e(`## in Employe::getEmpData Error data: ${error.response.data}, status: ${error.response.status}, headers: ${error.response.headers}`)
+      } else if (error.request) {
+        log.e(`## in Employe::getEmpData Error request: `, error.request)
+      } else {
+        log.e(`## in Employe::getEmpData Error: `, error.message)
+      }
+      log.e(`## in Employe::getEmpData Error: `, error.config)
+    })
+  }
+
   getEmpName(idemploye, get_data_url, callback) {
     let __fetch_url = `${get_data_url}/employe_get_name.php`
     axios.post(__fetch_url, {
@@ -100,10 +127,6 @@ class Employe {
         }
         // names must be equal
         return 0;
-      })
-
-      __data.forEach(function (fonction) {
-          fonction.Id = parseInt(fonction.Id)
       })
 
       callback(__data)
