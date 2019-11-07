@@ -16,8 +16,26 @@
     </v-app-bar>
 
     <v-content>
-      <HelloWorld/>
-      <Employe></Employe>
+      <HelloWorld
+        v-model="id"
+      ></HelloWorld>
+      <employe
+        v-model="idemploye"
+        @change="setEmploye"
+      ></employe>
+      <v-system-bar dark color="primary">
+        <!--
+        <v-spacer></v-spacer>
+        -->
+        <v-container fluid>
+          <v-row>
+            <v-col
+              align="center"
+              justify="center"
+            >idemploye: {{id}}</v-col>
+          </v-row>
+        </v-container>
+      </v-system-bar>
     </v-content>
   </v-app>
 </template>
@@ -33,7 +51,14 @@ export default {
     Employe
   },
   data: () => ({
+    idemploye: 9559,
+    id: 0
     //
   }),
+  methods: {
+    setEmploye (idemploye) {
+      console.log("### idemploye: ", idemploye)
+    }
+  }
 };
 </script>

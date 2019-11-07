@@ -81,11 +81,34 @@
         </v-layout>
       </v-flex>
     </v-layout>
+    <!--
+    <v-flex xs12 mb-5>
+      <v-layout justify-center>
+        {{value}}
+        <v-btn color="success" @click="update">update</v-btn>
+      </v-layout>
+    </v-flex>
+    -->
+    <v-container grid-list-xl>
+      <v-row justify="center">
+        {{value}}
+      </v-row>
+      <v-row justify="center">
+        <v-btn color="success" @click="update">update</v-btn>
+      </v-row>
+    </v-container>
   </v-container>
 </template>
 
 <script>
 export default {
+  props: {
+    value: {
+      type: Number,
+      default: 0,
+      required: true
+    }
+  },
   data: () => ({
     ecosystem: [
       {
@@ -138,5 +161,11 @@ export default {
       },
     ],
   }),
+  methods: {
+    update () {
+      console.log('### update id: ', this.value)
+      this.$emit('input', this.value+1)
+    }
+  }
 };
 </script>
