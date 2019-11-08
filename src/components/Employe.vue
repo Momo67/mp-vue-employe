@@ -40,36 +40,40 @@
         </v-flex>
 
         <v-flex xs12 sm4 md4> 
-          <v-menu
-            ref="menuDateNaissance"
-            v-model="menuDateNaissance"
-            :close-on-content-click="false"
-            :nudge-right="40"
-            transition="scale-transition"
-            offset-y
-            max-width="290px"
-            min-width="290px"
+          <v-text-field
+            v-model="dateNaissanceCH"
+            :rules="[rules.date]"
+            :label="$t('userInterface.Birthdate')"
+            hint="jj.mm.aaaa"
+            @blur="employee.datenaissance = parseDate(dateNaissanceCH)"
+            v-mask="'##.##.####'"
+            clearable
           >
-            <template v-slot:activator="{ on }">
-              <v-text-field
-                v-model="dateNaissanceCH"
-                :rules="[rules.date]"
-                :label="$t('userInterface.Birthdate')"
-                hint="jj.mm.aaaa"
-                @blur="employee.datenaissance = parseDate(dateNaissanceCH)"
-                v-on="on"
-                v-mask="'##.##.####'"
-                clearable
-              ></v-text-field>
+            <template v-slot:append>
+              <v-menu
+                ref="menuDateNaissance"
+                v-model="menuDateNaissance"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                transition="scale-transition"
+                offset-y
+                max-width="290px"
+                min-width="290px"
+              >
+                <template v-slot:activator="{ on }">
+                    <v-icon v-on="on">mdi-calendar</v-icon>
+                </template>
+                <v-date-picker 
+                  v-model="employee.datenaissance" 
+                  :max="new Date().toISOString().substr(0, 10)"
+                  @input="menuDateNaissance = false" 
+                  @change="setDateCH('dateNaissanceCH', $event)"
+                  :first-day-of-week="1" 
+                  locale="fr">
+                </v-date-picker>
+              </v-menu>
             </template>
-            <v-date-picker 
-              v-model="employee.datenaissance" 
-              :max="new Date().toISOString().substr(0, 10)"
-              @input="menuDateNaissance = false" 
-              :first-day-of-week="1" 
-              locale="fr">
-            </v-date-picker>
-          </v-menu>
+          </v-text-field>
         </v-flex>
 
         <v-flex xs12 sm4 md4> 
@@ -217,61 +221,79 @@
         </v-flex>
 
         <v-flex xs12 sm4 md4> 
-          <v-menu
-            ref="menuDebutActiv"
-            v-model="menuDebutActiv"
-            :close-on-content-click="false"
-            :nudge-right="40"
-            transition="scale-transition"
-            offset-y
-            max-width="290px"
-            min-width="290px"
+          <v-text-field
+            v-model="dateDebutActivCH"
+            :rules="[rules.date]"
+            :label="$t('userInterface.ActivityStart')"
+            hint="jj.mm.aaaa"
+            persistent-hint
+            @blur="employee.debutactiv = parseDate(dateDebutActivCH)"
+            clearable
+            v-mask="'##.##.####'"
+            :error="validateDebutActiv"
           >
-            <template v-slot:activator="{ on }">
-              <v-text-field
-                v-model="dateDebutActivCH"
-                :rules="[rules.date]"
-                :label="$t('userInterface.ActivityStart')"
-                hint="jj.mm.aaaa"
-                persistent-hint
-                @blur="employee.debutactiv = parseDate(dateDebutActivCH)"
-                v-on="on"
-                clearable
-                v-mask="'##.##.####'"
-                :error="validateDebutActiv"
-              ></v-text-field>
+            <template v-slot:append>
+              <v-menu
+                ref="menuDebutActiv"
+                v-model="menuDebutActiv"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                transition="scale-transition"
+                offset-y
+                max-width="290px"
+                min-width="290px"
+              >
+                <template v-slot:activator="{ on }">
+                    <v-icon v-on="on">mdi-calendar</v-icon>
+                </template>
+                <v-date-picker 
+                  v-model="employee.debutactiv" 
+                  @input="menuDebutActiv = false" 
+                  @change="setDateCH('dateDebutActivCH', $event)"
+                  :first-day-of-week="1" 
+                  locale="fr">
+                </v-date-picker>
+              </v-menu>
             </template>
-            <v-date-picker v-model="employee.debutactiv" @input="menuDebutActiv = false" :first-day-of-week="1" locale="fr"></v-date-picker>
-          </v-menu>
+          </v-text-field>
         </v-flex>
 
         <v-flex xs12 sm4 md4> 
-          <v-menu
-            ref="menuFinActiv"
-            v-model="menuFinActiv"
-            :close-on-content-click="false"
-            :nudge-right="40"
-            transition="scale-transition"
-            offset-y
-            max-width="290px"
-            min-width="290px"
+          <v-text-field
+            v-model="dateFinActivCH"
+            :rules="[rules.date]"
+            :label="$t('userInterface.ActivityEnd')"
+            hint="jj.mm.aaaa"
+            persistent-hint
+            @blur="employee.finactiv = parseDate(dateFinActivCH)"
+            clearable
+            v-mask="'##.##.####'"
+            :error="validateFinActiv"
           >
-            <template v-slot:activator="{ on }">
-              <v-text-field
-                v-model="dateFinActivCH"
-                :rules="[rules.date]"
-                :label="$t('userInterface.ActivityEnd')"
-                hint="jj.mm.aaaa"
-                persistent-hint
-                @blur="employee.finactiv = parseDate(dateFinActivCH)"
-                v-on="on"
-                clearable
-                v-mask="'##.##.####'"
-                :error="validateFinActiv"
-              ></v-text-field>
+            <template v-slot:append>
+              <v-menu
+                ref="menuFinActiv"
+                v-model="menuFinActiv"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                transition="scale-transition"
+                offset-y
+                max-width="290px"
+                min-width="290px"
+              >
+                <template v-slot:activator="{ on }">
+                    <v-icon v-on="on">mdi-calendar</v-icon>
+                </template>
+                <v-date-picker 
+                  v-model="employee.finactiv" 
+                  @input="menuFinActiv = false" 
+                  @change="setDateCH('dateFinActivCH', $event)"
+                  :first-day-of-week="1" 
+                  locale="fr">
+                </v-date-picker>
+              </v-menu>
             </template>
-            <v-date-picker v-model="employee.finactiv" @input="menuFinActiv = false" :first-day-of-week="1" locale="fr"></v-date-picker>
-          </v-menu>
+          </v-text-field>
         </v-flex>
 
         <v-flex xs12 sm4 md4>
@@ -471,40 +493,11 @@ export default {
   },
   data: () => ({
     message: '',
-    //msg_level : {error: 'error', warning: 'warning', info: 'info', success: 'success'},
     type_msg: 'warning',
     show_msg: false,
     show_prof_data: true,
     show_comment: true,
     valid: true,
-    employee: {
-      idemploye: 0,
-      idpolitesse: null,
-      issexm: -1,
-      nom: '',
-      prenom: '',
-      datenaissance: null,
-      telprive: null,
-      addresse: null,
-      codepostal: null,
-      localite: null,
-      idou: null,
-      oupath: null,
-      idfonction: null,
-      initiales: null,
-      email: '',
-      telprof: null,
-      natel: null,
-      tauxactiv: null,
-      debutactiv: null,
-      finactiv: null,
-      isactive: null,
-      codezadig: null,
-      loginnt: 'LAUSANNE_CH\\',
-      exchangelogin: null,
-      idmanager: null,
-      commentaire: null
-    },
     rules: {
       required: value => !!value || 'Champ obligatoire.',
       nomprenom: value => {
@@ -587,9 +580,11 @@ export default {
     fonctions: []
   }),
   watch: {
+    /*
     'employee.datenaissance' (val) {
       this.dateNaissanceCH = this.formatDate(val)
     },
+    */
     dateNaissanceCH (val) {
       if ((val !== null) && (val.length == 10)) {
         this.employee.datenaissance = this.parseDate(val)
@@ -643,6 +638,10 @@ export default {
     }
   },
   methods: {
+    setDateCH (field, date) {
+      console.log(`### updateDate field: ${field}, date: ${date}`)
+      this[field] = this.formatDate(date)
+    },
     setVal () {
       this.employee.isactive = 1
       this.employee.idou = 153
@@ -651,7 +650,7 @@ export default {
       this.getManagerName(10958)
     },
     initialize () {
-      //this.employee = Object.assign({}, EMPLOYEE_INIT)
+      this.employee = Object.assign({}, EMPLOYEE_INIT)
       this.orgunit = Object.assign({}, ORGUNIT_INIT)
       this.get_data_url.orgunit_url = (this.get_data_url.orgunit_url === '') ? ORGUNIT_URL_AJAX : this.get_data_url.orgunit_url
       this.get_data_url.employee_url = (this.get_data_url.employee_url === '') ? EMP_URL_AJAX : this.get_data_url.employee_url
