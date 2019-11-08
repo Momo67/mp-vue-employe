@@ -492,6 +492,7 @@ export default {
     }
   },
   data: () => ({
+    employee: {},
     message: '',
     type_msg: 'warning',
     show_msg: false,
@@ -580,11 +581,9 @@ export default {
     fonctions: []
   }),
   watch: {
-    /*
     'employee.datenaissance' (val) {
       this.dateNaissanceCH = this.formatDate(val)
     },
-    */
     dateNaissanceCH (val) {
       if ((val !== null) && (val.length == 10)) {
         this.employee.datenaissance = this.parseDate(val)
@@ -639,7 +638,6 @@ export default {
   },
   methods: {
     setDateCH (field, date) {
-      console.log(`### updateDate field: ${field}, date: ${date}`)
       this[field] = this.formatDate(date)
     },
     setVal () {
@@ -647,7 +645,8 @@ export default {
       this.employee.idou = 153
       this.employee.idfonction = 26
       this.employee.datenaissance = '1967-02-20'
-      this.getManagerName(10958)
+      //this.getManagerName(10958)
+      this.employee.initiales = 'MP'
     },
     initialize () {
       this.employee = Object.assign({}, EMPLOYEE_INIT)
@@ -686,7 +685,7 @@ export default {
     },
     getEmpData(idemploye) {
       EMPLOYE.getEmpData(idemploye, this.get_data_url.employee_url, (data) => {
-        this.employee = {...data}
+        this.employee = Object.assign({}, data)
         this.getManagerName(this.employee.idmanager)
       })
     },
@@ -745,7 +744,7 @@ export default {
     this.initialize()
   },
   mounted () {
-    //this.employee.idemploye = this.value
+    this.employee.idemploye = this.value
     if (this.value === 0)
       this.employee = Object.assign({}, EMPLOYEE_INIT)
     else

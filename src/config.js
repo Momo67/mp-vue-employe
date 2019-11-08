@@ -30,7 +30,7 @@ export const EMPLOYEE_INIT = {
   loginnt: 'LAUSANNE_CH\\',
   exchangelogin: null,
   idmanager: null,
-  commentaire: null
+  comment: null
 }
 
 export const ORGUNIT_INIT = {
