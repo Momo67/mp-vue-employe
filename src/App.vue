@@ -22,11 +22,29 @@
       <employe
         v-model="idemploye"
         @change="setEmploye"
-      ></employe>
+      >
+        <template v-slot:actions="{ on: { save, validate, setVal  }, props: { employee, valid } }">
+          <v-container>
+            <v-row justify="end">
+              <v-col>
+                <v-btn color="info" @click="setVal">Initialize</v-btn>
+              </v-col>
+              <v-spacer></v-spacer>
+              <v-col>
+                <v-btn color="success" @click="validate">Validate</v-btn>
+              </v-col>
+              <v-spacer></v-spacer>
+              <v-col cols="1">
+                <v-btn color="info" @click="save">Save</v-btn>
+              </v-col>
+            </v-row>
+            <v-row justify="center">
+              <v-col>{{employee}}</v-col>
+            </v-row>
+          </v-container>
+        </template>
+      </employe>
       <v-system-bar dark color="primary">
-        <!--
-        <v-spacer></v-spacer>
-        -->
         <v-container fluid>
           <v-row>
             <v-col
@@ -51,8 +69,16 @@ export default {
     Employe
   },
   data: () => ({
-    idemploye: 9559,
-    id: 0
+    //idemploye: 9559,
+    idemploye: 0,
+    id: 0,
+    justify: [
+      'start',
+      'center',
+      'end',
+      'space-around',
+      'space-between',
+    ],
     //
   }),
   methods: {
@@ -62,3 +88,9 @@ export default {
   }
 };
 </script>
+
+<style>
+  .actions button {
+    border-radius: 4px;
+  }
+</style>

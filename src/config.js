@@ -36,4 +36,3 @@ export const EMPLOYEE_INIT = {
 export const ORGUNIT_INIT = {
   isactive: 1
 }
-

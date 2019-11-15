@@ -1,5 +1,6 @@
 <template>
   <v-form 
+    v-model="valid"
     ref="form_data"
     lazy-validation>
     <v-container grid-list-md>
@@ -386,47 +387,59 @@
         </v-flex>
       </v-layout>
 
-      <v-layout wrap>
-        <v-flex xs2 align-content-center>
-          <v-btn
-            color="info"
-            @click="save"
-          >
-            Save
-          </v-btn>
-        </v-flex>
-        <v-flex xs2 align-content-center>
-          <v-btn
-            color="info"
-            @click="setVal"
-          >
-            Initialize
-          </v-btn>
-        </v-flex>
-        <v-flex xs2 align-content-center>
-          <v-btn
-            :disabled="!valid"
-            color="success"
-            @click="validate"
-          >
-            Validate
-          </v-btn>
-        </v-flex>
-        <v-flex xs2 align-content-center>
-          <v-btn
-            color="info"
-            @click="checkRights"
-          >
-            Check rights
-          </v-btn>
-        </v-flex>
+      <v-layout wrap class="actions">
+        <slot name="actions" v-bind:on="{ save, setVal, validate}" v-bind:props="{ employee, valid }">
+          <v-container >
+            <v-row justify="end">
+              <v-col cols="1">
+                <v-btn color="success" @click="save">Sauver</v-btn>
+              </v-col>
+            </v-row>
+          </v-container>
 
-        <v-flex xs12 md12 lg12>
-          {{employee}}
-        </v-flex>
-        <v-flex xs12 md12 lg12>
-          {{show_msg}}
-        </v-flex>
+<!--
+          <v-flex xs2 align-content-center>
+            <v-btn
+              color="info"
+              @click="save"
+            >
+              Save
+            </v-btn>
+          </v-flex>
+          <v-flex xs2 align-content-center>
+            <v-btn
+              color="info"
+              @click="setVal"
+            >
+              Initialize
+            </v-btn>
+          </v-flex>
+          <v-flex xs2 align-content-center>
+            <v-btn
+              :disabled="!valid"
+              color="success"
+              @click="validate"
+            >
+              Validate
+            </v-btn>
+          </v-flex>
+          <v-flex xs2 align-content-center>
+            <v-btn
+              color="info"
+              @click="checkRights"
+            >
+              Check rights
+            </v-btn>
+          </v-flex>
+
+          <v-flex xs12 md12 lg12>
+            {{employee}}
+          </v-flex>
+          <v-flex xs12 md12 lg12>
+            {{show_msg}}
+          </v-flex>
+-->          
+        </slot>
       </v-layout>
 
       <v-dialog
