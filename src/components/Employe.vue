@@ -448,7 +448,7 @@ export default {
   directives: {mask},
   props: {
     value: {
-      type: Number,
+      type: [String, Number],
       default: 0,
       required: true
     },

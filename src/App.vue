@@ -69,8 +69,8 @@ export default {
     Employe
   },
   data: () => ({
-    //idemploye: 9559,
     idemploye: 0,
+    //idemploye: 0,
     id: 0,
     justify: [
       'start',
