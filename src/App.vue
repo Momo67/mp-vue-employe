@@ -50,7 +50,7 @@
             <v-col
               align="center"
               justify="center"
-            >idemploye: {{id}}</v-col>
+            >idemploye: {{idemploye}}</v-col>
           </v-row>
         </v-container>
       </v-system-bar>

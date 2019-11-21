@@ -388,7 +388,7 @@
       </v-layout>
 
       <v-layout wrap class="actions">
-        <slot name="actions" v-bind:on="{ save, setVal, validate}" v-bind:props="{ employee, valid }">
+        <slot name="actions" v-bind:on="{ save, setVal, validate }" v-bind:props="{ employee, valid }">
           <v-container >
             <v-row justify="end">
               <v-col cols="1">
@@ -396,49 +396,6 @@
               </v-col>
             </v-row>
           </v-container>
-
-<!--
-          <v-flex xs2 align-content-center>
-            <v-btn
-              color="info"
-              @click="save"
-            >
-              Save
-            </v-btn>
-          </v-flex>
-          <v-flex xs2 align-content-center>
-            <v-btn
-              color="info"
-              @click="setVal"
-            >
-              Initialize
-            </v-btn>
-          </v-flex>
-          <v-flex xs2 align-content-center>
-            <v-btn
-              :disabled="!valid"
-              color="success"
-              @click="validate"
-            >
-              Validate
-            </v-btn>
-          </v-flex>
-          <v-flex xs2 align-content-center>
-            <v-btn
-              color="info"
-              @click="checkRights"
-            >
-              Check rights
-            </v-btn>
-          </v-flex>
-
-          <v-flex xs12 md12 lg12>
-            {{employee}}
-          </v-flex>
-          <v-flex xs12 md12 lg12>
-            {{show_msg}}
-          </v-flex>
--->          
         </slot>
       </v-layout>
 
