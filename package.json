@@ -1,11 +1,11 @@
 {
   "name": "mp-vue-employe",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build-lib": "vue-cli-service build --target lib --mode development --name Employe ./src/components/Employe.vue",
-    "build-wc": "vue-cli-service build --target wc --mode development --name employe ./src/components/Employe.vue",
+    "build-lib": "vue-cli-service build --target lib --mode production --name Employe ./src/components/Employe.vue",
+    "build-wc": "vue-cli-service build --target wc --mode production --name employe ./src/components/Employe.vue",
     "lint": "vue-cli-service lint",
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'"
   },
