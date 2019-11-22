@@ -656,7 +656,8 @@ export default {
     getEmpData(idemploye) {
       EMPLOYE.getEmpData(idemploye, this.get_data_url.employee_url, (data) => {
         this.employee = Object.assign({}, data)
-        this.getManagerName(this.employee.idmanager)
+        if (this.employee.idmanager != null)
+          this.getManagerName(this.employee.idmanager)
       })
     },
     getManagerName (idemploye) {
