@@ -551,6 +551,13 @@ export default {
     fonctions: []
   }),
   watch: {
+    value (val) {
+      this.employee.idemploye = val
+      if (val === 0)
+        this.employee = Object.assign({}, EMPLOYEE_INIT)
+      else
+        this.getEmpData(val)
+  },
     'employee.datenaissance' (val) {
       this.dateNaissanceCH = this.formatDate(val)
     },
