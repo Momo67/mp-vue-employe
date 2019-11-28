@@ -1,425 +1,427 @@
 <template>
-  <v-form 
-    v-model="valid"
-    ref="form_data"
-    lazy-validation>
-    <v-container grid-list-md>
-      <v-layout wrap>
-        <v-flex xs12 sm4 md4>
-          <v-select
-            v-model="employee.idpolitesse"
-            :rules="[rules.required]"
-            item-text="politesse"
-            item-value="id"
-            :items="[{id: '1', politesse:'Monsieur'}, {id: '2', politesse:'Madame'}]"
-            :label="$t('userInterface.Courtesy')"
-            required
-            clearable
-          ></v-select>
-        </v-flex>
+  <v-app id="mp-vue-employe">
+    <v-form 
+      v-model="valid"
+      ref="form_data"
+      lazy-validation>
+      <v-container grid-list-md>
+        <v-layout wrap>
+          <v-flex xs12 sm4 md4>
+            <v-select
+              v-model="employee.idpolitesse"
+              :rules="[rules.required]"
+              item-text="politesse"
+              item-value="id"
+              :items="[{id: '1', politesse:'Monsieur'}, {id: '2', politesse:'Madame'}]"
+              :label="$t('userInterface.Courtesy')"
+              required
+              clearable
+            ></v-select>
+          </v-flex>
 
-        <v-flex xs12 sm4 md4>
-          <v-text-field
-            v-model="employee.nom"
-            :rules="[rules.required,rules.nomprenom]"
-            counter="40"
-            :label="$t('userInterface.LastName')"
-            required
-            clearable
-          ></v-text-field>
-        </v-flex>
+          <v-flex xs12 sm4 md4>
+            <v-text-field
+              v-model="employee.nom"
+              :rules="[rules.required,rules.nomprenom]"
+              counter="40"
+              :label="$t('userInterface.LastName')"
+              required
+              clearable
+            ></v-text-field>
+          </v-flex>
 
-        <v-flex xs12 sm4 md4> 
-          <v-text-field
-            v-model="employee.prenom"
-            :rules="[rules.required,rules.nomprenom]"
-            counter="30"
-            :label="$t('userInterface.FirstName')"
-            required
-            clearable
-          ></v-text-field>
-        </v-flex>
+          <v-flex xs12 sm4 md4> 
+            <v-text-field
+              v-model="employee.prenom"
+              :rules="[rules.required,rules.nomprenom]"
+              counter="30"
+              :label="$t('userInterface.FirstName')"
+              required
+              clearable
+            ></v-text-field>
+          </v-flex>
 
-        <v-flex xs12 sm4 md4> 
-          <v-text-field
-            v-model="dateNaissanceCH"
-            :rules="[rules.date]"
-            :label="$t('userInterface.Birthdate')"
-            hint="jj.mm.aaaa"
-            @blur="employee.datenaissance = parseDate(dateNaissanceCH)"
-            v-mask="'##.##.####'"
-            clearable
-          >
-            <template v-slot:append>
-              <v-menu
-                ref="menuDateNaissance"
-                v-model="menuDateNaissance"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                max-width="290px"
-                min-width="290px"
-              >
-                <template v-slot:activator="{ on }">
-                    <v-icon v-on="on">mdi-calendar</v-icon>
-                </template>
-                <v-date-picker 
-                  v-model="employee.datenaissance" 
-                  :max="new Date().toISOString().substr(0, 10)"
-                  @input="menuDateNaissance = false" 
-                  @change="setDateCH('dateNaissanceCH', $event)"
-                  :first-day-of-week="1" 
-                  locale="fr">
-                </v-date-picker>
-              </v-menu>
-            </template>
-          </v-text-field>
-        </v-flex>
+          <v-flex xs12 sm4 md4> 
+            <v-text-field
+              v-model="dateNaissanceCH"
+              :rules="[rules.date]"
+              :label="$t('userInterface.Birthdate')"
+              hint="jj.mm.aaaa"
+              @blur="employee.datenaissance = parseDate(dateNaissanceCH)"
+              v-mask="'##.##.####'"
+              clearable
+            >
+              <template v-slot:append>
+                <v-menu
+                  ref="menuDateNaissance"
+                  v-model="menuDateNaissance"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  max-width="290px"
+                  min-width="290px"
+                >
+                  <template v-slot:activator="{ on }">
+                      <v-icon v-on="on">mdi-calendar</v-icon>
+                  </template>
+                  <v-date-picker 
+                    v-model="employee.datenaissance" 
+                    :max="new Date().toISOString().substr(0, 10)"
+                    @input="menuDateNaissance = false" 
+                    @change="setDateCH('dateNaissanceCH', $event)"
+                    :first-day-of-week="1" 
+                    locale="fr">
+                  </v-date-picker>
+                </v-menu>
+              </template>
+            </v-text-field>
+          </v-flex>
 
-        <v-flex xs12 sm4 md4> 
-          <v-text-field
-            v-model="employee.telprive"
-            :rules="[rules.telprive]"
-            :label="$t('userInterface.PrivatePhone')"
-            hint="0xx xxx xx xx"
-            v-mask="'### ### ## ##'"
-            clearable
-          ></v-text-field>
-        </v-flex>
+          <v-flex xs12 sm4 md4> 
+            <v-text-field
+              v-model="employee.telprive"
+              :rules="[rules.telprive]"
+              :label="$t('userInterface.PrivatePhone')"
+              hint="0xx xxx xx xx"
+              v-mask="'### ### ## ##'"
+              clearable
+            ></v-text-field>
+          </v-flex>
 
-        <v-flex xs12 sm4 md4>&nbsp;</v-flex>
+          <v-flex xs12 sm4 md4>&nbsp;</v-flex>
 
-        <v-flex xs12 sm4 md4> 
-          <v-text-field
-            v-model="employee.addresse"
-            :rules="[rules.addresse]"
-            :label="$t('userInterface.Address')"
-            counter="50"
-            clearable
-          ></v-text-field>
-        </v-flex>
+          <v-flex xs12 sm4 md4> 
+            <v-text-field
+              v-model="employee.addresse"
+              :rules="[rules.addresse]"
+              :label="$t('userInterface.Address')"
+              counter="50"
+              clearable
+            ></v-text-field>
+          </v-flex>
 
-        <v-flex xs12 sm4 md4> 
-          <v-text-field
-            v-model="employee.codepostal"
-            :rules="[rules.codepostal]"
-            :label="$t('userInterface.PostalCode')"
-            clearable
-          ></v-text-field>
-        </v-flex>
+          <v-flex xs12 sm4 md4> 
+            <v-text-field
+              v-model="employee.codepostal"
+              :rules="[rules.codepostal]"
+              :label="$t('userInterface.PostalCode')"
+              clearable
+            ></v-text-field>
+          </v-flex>
 
-        <v-flex xs12 sm4 md4> 
-          <v-text-field
-            v-model="employee.localite"
-            :rules="[rules.localite]"
-            :label="$t('userInterface.Locality')"
-            counter="50"
-            clearable
-          ></v-text-field>
-        </v-flex>
-      </v-layout>
+          <v-flex xs12 sm4 md4> 
+            <v-text-field
+              v-model="employee.localite"
+              :rules="[rules.localite]"
+              :label="$t('userInterface.Locality')"
+              counter="50"
+              clearable
+            ></v-text-field>
+          </v-flex>
+        </v-layout>
 
-      <v-layout wrap justify-end align-end>
-        <v-flex shrink>
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on }">
-              <v-btn icon v-on="on" @click="show_prof_data = !show_prof_data">
-                <v-icon>{{ show_prof_data ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
-              </v-btn>
-            </template>
-            <span>{{show_prof_data ? $t('userInterface.hideProfData') : $t('userInterface.showProfData')}}</span>
-          </v-tooltip>
-        </v-flex>
-      </v-layout>
-      <v-layout wrap v-show="show_prof_data">
-        <v-flex xs12 sm4 md4>
-          <v-autocomplete
-            v-model="employee.idou"
-            :rules="[rules.required]"
-            :items="orgunits"
-            color="primary"
-            hide-no-data
-            item-text="Description"
-            item-value="IdOrgUnit"
-            :label="$t('userInterface.OrgUnit')"
-            :placeholder="$t('userInterface.SearchHint')"
-            autocomplete="something-new"
-            required
-            clearable
-          ></v-autocomplete>
-        </v-flex>
+        <v-layout wrap justify-end align-end>
+          <v-flex shrink>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-btn icon v-on="on" @click="show_prof_data = !show_prof_data">
+                  <v-icon>{{ show_prof_data ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
+                </v-btn>
+              </template>
+              <span>{{show_prof_data ? $t('userInterface.hideProfData') : $t('userInterface.showProfData')}}</span>
+            </v-tooltip>
+          </v-flex>
+        </v-layout>
+        <v-layout wrap v-show="show_prof_data">
+          <v-flex xs12 sm4 md4>
+            <v-autocomplete
+              v-model="employee.idou"
+              :rules="[rules.required]"
+              :items="orgunits"
+              color="primary"
+              hide-no-data
+              item-text="Description"
+              item-value="IdOrgUnit"
+              :label="$t('userInterface.OrgUnit')"
+              :placeholder="$t('userInterface.SearchHint')"
+              autocomplete="something-new"
+              required
+              clearable
+            ></v-autocomplete>
+          </v-flex>
 
-        <v-flex xs12 sm4 md4>
-          <v-autocomplete
-            v-model="employee.idfonction"
-            :rules="[rules.required]"
-            :items="fonctions"
-            color="primary"
-            hide-no-data
-            item-text="Nom"
-            item-value="Id"
-            :label="$t('userInterface.Fonction')"
-            :placeholder="$t('userInterface.SearchHint')"
-            autocomplete="something-new"
-            required
-            clearable
-          ></v-autocomplete>
-        </v-flex>
+          <v-flex xs12 sm4 md4>
+            <v-autocomplete
+              v-model="employee.idfonction"
+              :rules="[rules.required]"
+              :items="fonctions"
+              color="primary"
+              hide-no-data
+              item-text="Nom"
+              item-value="Id"
+              :label="$t('userInterface.Fonction')"
+              :placeholder="$t('userInterface.SearchHint')"
+              autocomplete="something-new"
+              required
+              clearable
+            ></v-autocomplete>
+          </v-flex>
 
-        <v-flex xs12 sm4 md4> 
-          <v-text-field
-            v-model="employee.initiales"
-            :rules="[rules.initiales]"
-            :label="$t('userInterface.Initials')"
-            counter="10"
-            clearable
-          ></v-text-field>
-        </v-flex>
-        
-        <v-flex xs12 sm4 md4> 
-          <v-text-field
-            v-model="employee.email"
-            :rules="[rules.required, rules.email]"
-            :label="$t('userInterface.Email')"
-            counter="50"
-            required
-            clearable
-          ></v-text-field>
-        </v-flex>
-        
-        <v-flex xs12 sm4 md4> 
-          <v-text-field
-            v-model="employee.telprof"
-            :rules="[rules.telprof]"
-            :label="$t('userInterface.ProfPhone')"
-            hint="xx xx ou 0xx xxx xx xx"
-            v-mask="['## ##', '### ### ## ##']"
-            clearable
-          ></v-text-field>
-        </v-flex>
-        
-        <v-flex xs12 sm4 md4> 
-          <v-text-field
-            v-model="employee.natel"
-            :rules="[rules.natel]"
-            :label="$t('userInterface.Natel')"
-            hint="07x xxx xx xx"
-            v-mask="'### ### ## ##'"
-            clearable
-          ></v-text-field>
-        </v-flex>
-        
-        <v-flex xs12 sm4 md4> 
-          <v-text-field
-            v-model="employee.tauxactiv"
-            :rules="[rules.tauxactiv]"
-            :label="$t('userInterface.OccupancyRate')"
-            counter="3"
-            hint="%"
-            clearable
-          ></v-text-field>
-        </v-flex>
+          <v-flex xs12 sm4 md4> 
+            <v-text-field
+              v-model="employee.initiales"
+              :rules="[rules.initiales]"
+              :label="$t('userInterface.Initials')"
+              counter="10"
+              clearable
+            ></v-text-field>
+          </v-flex>
+          
+          <v-flex xs12 sm4 md4> 
+            <v-text-field
+              v-model="employee.email"
+              :rules="[rules.required, rules.email]"
+              :label="$t('userInterface.Email')"
+              counter="50"
+              required
+              clearable
+            ></v-text-field>
+          </v-flex>
+          
+          <v-flex xs12 sm4 md4> 
+            <v-text-field
+              v-model="employee.telprof"
+              :rules="[rules.telprof]"
+              :label="$t('userInterface.ProfPhone')"
+              hint="xx xx ou 0xx xxx xx xx"
+              v-mask="['## ##', '### ### ## ##']"
+              clearable
+            ></v-text-field>
+          </v-flex>
+          
+          <v-flex xs12 sm4 md4> 
+            <v-text-field
+              v-model="employee.natel"
+              :rules="[rules.natel]"
+              :label="$t('userInterface.Natel')"
+              hint="07x xxx xx xx"
+              v-mask="'### ### ## ##'"
+              clearable
+            ></v-text-field>
+          </v-flex>
+          
+          <v-flex xs12 sm4 md4> 
+            <v-text-field
+              v-model="employee.tauxactiv"
+              :rules="[rules.tauxactiv]"
+              :label="$t('userInterface.OccupancyRate')"
+              counter="3"
+              hint="%"
+              clearable
+            ></v-text-field>
+          </v-flex>
 
-        <v-flex xs12 sm4 md4> 
-          <v-text-field
-            v-model="dateDebutActivCH"
-            :rules="[rules.date]"
-            :label="$t('userInterface.ActivityStart')"
-            hint="jj.mm.aaaa"
-            persistent-hint
-            @blur="employee.debutactiv = parseDate(dateDebutActivCH)"
-            clearable
-            v-mask="'##.##.####'"
-            :error="validateDebutActiv"
-          >
-            <template v-slot:append>
-              <v-menu
-                ref="menuDebutActiv"
-                v-model="menuDebutActiv"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                max-width="290px"
-                min-width="290px"
-              >
-                <template v-slot:activator="{ on }">
-                    <v-icon v-on="on">mdi-calendar</v-icon>
-                </template>
-                <v-date-picker 
-                  v-model="employee.debutactiv" 
-                  @input="menuDebutActiv = false" 
-                  @change="setDateCH('dateDebutActivCH', $event)"
-                  :first-day-of-week="1" 
-                  locale="fr">
-                </v-date-picker>
-              </v-menu>
-            </template>
-          </v-text-field>
-        </v-flex>
+          <v-flex xs12 sm4 md4> 
+            <v-text-field
+              v-model="dateDebutActivCH"
+              :rules="[rules.date]"
+              :label="$t('userInterface.ActivityStart')"
+              hint="jj.mm.aaaa"
+              persistent-hint
+              @blur="employee.debutactiv = parseDate(dateDebutActivCH)"
+              clearable
+              v-mask="'##.##.####'"
+              :error="validateDebutActiv"
+            >
+              <template v-slot:append>
+                <v-menu
+                  ref="menuDebutActiv"
+                  v-model="menuDebutActiv"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  max-width="290px"
+                  min-width="290px"
+                >
+                  <template v-slot:activator="{ on }">
+                      <v-icon v-on="on">mdi-calendar</v-icon>
+                  </template>
+                  <v-date-picker 
+                    v-model="employee.debutactiv" 
+                    @input="menuDebutActiv = false" 
+                    @change="setDateCH('dateDebutActivCH', $event)"
+                    :first-day-of-week="1" 
+                    locale="fr">
+                  </v-date-picker>
+                </v-menu>
+              </template>
+            </v-text-field>
+          </v-flex>
 
-        <v-flex xs12 sm4 md4> 
-          <v-text-field
-            v-model="dateFinActivCH"
-            :rules="[rules.date]"
-            :label="$t('userInterface.ActivityEnd')"
-            hint="jj.mm.aaaa"
-            persistent-hint
-            @blur="employee.finactiv = parseDate(dateFinActivCH)"
-            clearable
-            v-mask="'##.##.####'"
-            :error="validateFinActiv"
-          >
-            <template v-slot:append>
-              <v-menu
-                ref="menuFinActiv"
-                v-model="menuFinActiv"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                max-width="290px"
-                min-width="290px"
-              >
-                <template v-slot:activator="{ on }">
-                    <v-icon v-on="on">mdi-calendar</v-icon>
-                </template>
-                <v-date-picker 
-                  v-model="employee.finactiv" 
-                  @input="menuFinActiv = false" 
-                  @change="setDateCH('dateFinActivCH', $event)"
-                  :first-day-of-week="1" 
-                  locale="fr">
-                </v-date-picker>
-              </v-menu>
-            </template>
-          </v-text-field>
-        </v-flex>
+          <v-flex xs12 sm4 md4> 
+            <v-text-field
+              v-model="dateFinActivCH"
+              :rules="[rules.date]"
+              :label="$t('userInterface.ActivityEnd')"
+              hint="jj.mm.aaaa"
+              persistent-hint
+              @blur="employee.finactiv = parseDate(dateFinActivCH)"
+              clearable
+              v-mask="'##.##.####'"
+              :error="validateFinActiv"
+            >
+              <template v-slot:append>
+                <v-menu
+                  ref="menuFinActiv"
+                  v-model="menuFinActiv"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  max-width="290px"
+                  min-width="290px"
+                >
+                  <template v-slot:activator="{ on }">
+                      <v-icon v-on="on">mdi-calendar</v-icon>
+                  </template>
+                  <v-date-picker 
+                    v-model="employee.finactiv" 
+                    @input="menuFinActiv = false" 
+                    @change="setDateCH('dateFinActivCH', $event)"
+                    :first-day-of-week="1" 
+                    locale="fr">
+                  </v-date-picker>
+                </v-menu>
+              </template>
+            </v-text-field>
+          </v-flex>
 
-        <v-flex xs12 sm4 md4>
-          <v-text-field
-            v-model="employee.codezadig"
-            :rules="[rules.codezadig]"
-            :label="$t('userInterface.CodeZadig')"
-            clearable
-          ></v-text-field>
-        </v-flex>
+          <v-flex xs12 sm4 md4>
+            <v-text-field
+              v-model="employee.codezadig"
+              :rules="[rules.codezadig]"
+              :label="$t('userInterface.CodeZadig')"
+              clearable
+            ></v-text-field>
+          </v-flex>
 
-        <v-flex xs12 sm4 md4> 
-          <v-text-field
-            v-model="employee.loginnt"
-            :rules="[rules.required,rules.loginnt]"
-            counter="30"
-            :label="$t('userInterface.LoginNT')"
-            required
-            clearable
-          ></v-text-field>
-        </v-flex>
+          <v-flex xs12 sm4 md4> 
+            <v-text-field
+              v-model="employee.loginnt"
+              :rules="[rules.required,rules.loginnt]"
+              counter="30"
+              :label="$t('userInterface.LoginNT')"
+              required
+              clearable
+            ></v-text-field>
+          </v-flex>
 
-        <v-flex xs12 sm4 md4> 
-          <v-text-field
-            v-model="employee.exchangelogin"
-            :rules="[]"
-            counter="30"
-            :label="$t('userInterface.ExchangeLogin')"
-            clearable
-          ></v-text-field>
-        </v-flex>
+          <v-flex xs12 sm4 md4> 
+            <v-text-field
+              v-model="employee.exchangelogin"
+              :rules="[]"
+              counter="30"
+              :label="$t('userInterface.ExchangeLogin')"
+              clearable
+            ></v-text-field>
+          </v-flex>
 
-        <v-flex xs12 sm4 md4>
-          <v-select
-            v-model="employee.isactive"
-            :rules="[rules.required]"
-            item-text="etat"
-            item-value="id"
-            :items="[{id: '1', etat:'oui'}, {id: '-1', etat:'non'}]"
-            :label="$t('userInterface.Active')"
-            required
-            clearable
-          ></v-select>
-        </v-flex>
+          <v-flex xs12 sm4 md4>
+            <v-select
+              v-model="employee.isactive"
+              :rules="[rules.required]"
+              item-text="etat"
+              item-value="id"
+              :items="[{id: '1', etat:'oui'}, {id: '-1', etat:'non'}]"
+              :label="$t('userInterface.Active')"
+              required
+              clearable
+            ></v-select>
+          </v-flex>
 
-        <v-flex xs12 sm4 md4> 
-          <v-text-field
-            v-model="manager"
-            :label="$t('userInterface.Manager')"
-            readonly
-          >
-            <template v-slot:append>
-              <employe-search id="employe-search"
-                :fullscreen="false"
-                :multi="false"
-                :json="true"
-                :get_data_url="get_data_url"
-                @selection_ready="setManager"
-              >
-                <template v-slot:activator="{ on }">
-                    <v-icon v-on="on">mdi-account</v-icon>
-                </template>
-              </employe-search>
-            </template>
-          </v-text-field>
-        </v-flex>
-      </v-layout>
+          <v-flex xs12 sm4 md4> 
+            <v-text-field
+              v-model="manager"
+              :label="$t('userInterface.Manager')"
+              readonly
+            >
+              <template v-slot:append>
+                <employe-search id="employe-search"
+                  :fullscreen="false"
+                  :multi="false"
+                  :json="true"
+                  :get_data_url="get_data_url"
+                  @selection_ready="setManager"
+                >
+                  <template v-slot:activator="{ on }">
+                      <v-icon v-on="on">mdi-account</v-icon>
+                  </template>
+                </employe-search>
+              </template>
+            </v-text-field>
+          </v-flex>
+        </v-layout>
 
-      <v-layout wrap justify-end align-end>
-        <v-flex shrink>
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on }">
-              <v-btn icon v-on="on" @click="show_comment = !show_comment">
-                <v-icon>{{ show_comment ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
-              </v-btn>
-            </template>
-            <span>{{show_comment ? $t('userInterface.hideComment') : $t('userInterface.showComment')}}</span>
-          </v-tooltip>
-        </v-flex>
-      </v-layout>
-      <v-layout wrap v-show="show_comment">
-        <v-flex> 
-          <v-textarea
-            v-model="employee.commentaire"
-            :rules="[rules.commentaire]"
-            counter="250"
-            :label="$t('userInterface.Comment')"
-            clearable
-          ></v-textarea>
-        </v-flex>
-      </v-layout>
+        <v-layout wrap justify-end align-end>
+          <v-flex shrink>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-btn icon v-on="on" @click="show_comment = !show_comment">
+                  <v-icon>{{ show_comment ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
+                </v-btn>
+              </template>
+              <span>{{show_comment ? $t('userInterface.hideComment') : $t('userInterface.showComment')}}</span>
+            </v-tooltip>
+          </v-flex>
+        </v-layout>
+        <v-layout wrap v-show="show_comment">
+          <v-flex> 
+            <v-textarea
+              v-model="employee.commentaire"
+              :rules="[rules.commentaire]"
+              counter="250"
+              :label="$t('userInterface.Comment')"
+              clearable
+            ></v-textarea>
+          </v-flex>
+        </v-layout>
 
-      <v-layout wrap class="actions">
-        <slot name="actions" v-bind:on="{ save, setVal, validate }" v-bind:props="{ employee, valid }">
-          <v-container >
-            <v-row justify="end">
-              <v-col cols="1">
-                <v-btn color="success" @click="save">Sauver</v-btn>
-              </v-col>
-            </v-row>
-          </v-container>
-        </slot>
-      </v-layout>
+        <v-layout wrap class="actions">
+          <slot name="actions" v-bind:on="{ save, setVal, validate }" v-bind:props="{ employee, valid }">
+            <v-container >
+              <v-row justify="end">
+                <v-col cols="1">
+                  <v-btn color="success" @click="save">Sauver</v-btn>
+                </v-col>
+              </v-row>
+            </v-container>
+          </slot>
+        </v-layout>
 
-      <v-dialog
-        ref="message"
-        v-model="show_msg"
-        max-width="xs6"
-        width="550"
-        hide-overlay
-      >
-        <v-alert
+        <v-dialog
+          ref="message"
           v-model="show_msg"
-          :type="type_msg"
-          prominent
-          dismissible
-          class="alert"
+          max-width="xs6"
+          width="550"
+          hide-overlay
         >
-          <template v-slot:default>
-            <div v-html="message"></div>
-          </template>
-        </v-alert>
-      </v-dialog>
-    </v-container>
-  </v-form>
+          <v-alert
+            v-model="show_msg"
+            :type="type_msg"
+            prominent
+            dismissible
+            class="alert"
+          >
+            <template v-slot:default>
+              <div v-html="message"></div>
+            </template>
+          </v-alert>
+        </v-dialog>
+      </v-container>
+    </v-form>
+  </v-app>
 </template>
 
 <script>
