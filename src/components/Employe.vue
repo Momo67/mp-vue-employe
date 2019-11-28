@@ -522,7 +522,7 @@ export default {
         return pattern.test(value) || 'Valeur invalide'
       },
       loginnt: value => {
-        const pattern = /^(LAUSANNE_CH\\[a-zA-Z_*]{1,5}|[a-zA-Z_*]{1,5})\d*\*?$/
+        const pattern = /^(LAUSANNE_CH\\[a-zA-Z_*]{1,5}|[a-zA-Z_*]{1,5})\d*[a-zA-Z_*]*\*?$/
         return pattern.test(value) || 'Valeur invalide'
       },
       isactive: value => {
