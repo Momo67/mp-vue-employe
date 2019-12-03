@@ -474,7 +474,7 @@ export default {
     rules: {
       required: value => !!value || 'Champ obligatoire.',
       nomprenom: value => {
-        const pattern = /^[a-zA-Zéèêëôöäàâüûîïç\s-]*$/
+        const pattern = /^[a-zA-Zéèêëôöäàâüûîïç'\s-]*$/
         return pattern.test(value) || 'Valeur invalide'
       },
       date: value => {
