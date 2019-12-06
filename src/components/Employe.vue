@@ -3,7 +3,8 @@
     <v-form 
       v-model="valid"
       ref="form_data"
-      lazy-validation>
+      lazy-validation
+    >
       <v-container grid-list-md>
         <v-layout wrap>
           <v-flex xs12 sm4 md4>
@@ -334,7 +335,7 @@
               :rules="[rules.required]"
               item-text="etat"
               item-value="id"
-              :items="[{id: '1', etat:'oui'}, {id: '-1', etat:'non'}]"
+              :items="[{id: '1', etat:'oui'}, {id: '0', etat:'non'}]"
               :label="$t('userInterface.Active')"
               required
               clearable
@@ -386,6 +387,14 @@
               clearable
             ></v-textarea>
           </v-flex>
+        </v-layout>
+
+        <v-layout wrap class="modif_info">
+          <slot name="infos" v-bind:props="{ employee }">
+            <v-flex>
+              {{`Créé le ${this.formatDate(employee.datecreated)} par ${this.creator}. Dernière modification le ${this.formatDate(employee.datelastmodif)} par ${this.lastmodifuser}`}}
+            </v-flex>
+          </slot>
         </v-layout>
 
         <v-layout wrap class="actions">
@@ -522,7 +531,7 @@ export default {
         return pattern.test(value) || 'Valeur invalide'
       },
       loginnt: value => {
-        const pattern = /^(LAUSANNE_CH\\[a-zA-Z_*]{1,5}|[a-zA-Z_*]{1,5})\d*[a-zA-Z_*]*\*?$/
+        const pattern = /^((LAUSANNE_CH|TRX)\\[a-zA-Z_*-]{1,5}|[a-zA-Z_*-]{1,5})\d*[a-zA-Z_*-]*\*?$/
         return pattern.test(value) || 'Valeur invalide'
       },
       isactive: value => {
@@ -548,6 +557,8 @@ export default {
     menuFinActiv: false,
     initiales: null,
     manager: '',
+    creator: '',
+    lastmodifuser: '',
     orgunit: undefined,
     orgunits: [],
     fonctions: []
@@ -667,6 +678,24 @@ export default {
         this.employee = Object.assign({}, data)
         if (this.employee.idmanager != null)
           this.getManagerName(this.employee.idmanager)
+        if (this.employee.idcreator != null)
+          this.getEmpCreator(this.employee.idcreator)
+        if (this.employee.idlastmodifuser != null)
+          this.getLastModifUser(this.employee.idlastmodifuser)
+      })
+    },
+    getEmpCreator (idemploye) {
+      let __empname = ''
+      EMPLOYE.getEmpName(idemploye, this.get_data_url.employee_url, (data) => {
+        __empname = data[0].Nom.toUpperCase() + ' ' + data[0].Prenom
+        this.creator = __empname
+      })
+    },
+    getLastModifUser (idemploye) {
+      let __empname = ''
+      EMPLOYE.getEmpName(idemploye, this.get_data_url.employee_url, (data) => {
+        __empname = data[0].Nom.toUpperCase() + ' ' + data[0].Prenom
+        this.lastmodifuser = __empname
       })
     },
     getManagerName (idemploye) {
@@ -747,6 +776,11 @@ export default {
 }
 .container {
   padding: 1px;
+}
+.modif_info {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10pt; 
+  font-style: italic;
 }
 </style>
 

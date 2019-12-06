@@ -30,6 +30,8 @@ export const EMPLOYEE_INIT = {
   loginnt: 'LAUSANNE_CH\\',
   exchangelogin: null,
   idmanager: null,
+  idcreator: null,
+  idlastmodifuser: null,
   comment: null
 }
 

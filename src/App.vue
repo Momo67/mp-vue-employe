@@ -23,6 +23,7 @@
         v-model="idemploye"
         @change="setEmploye"
       >
+      <!--
         <template v-slot:actions="{ on: { save, validate, setVal  }, props: { employee, valid } }">
           <v-container>
             <v-row justify="end">
@@ -43,6 +44,8 @@
             </v-row>
           </v-container>
         </template>
+      -->
+        <template v-slot:infos="{ props: { employee }}"></template>
       </employe>
       <v-system-bar dark color="primary">
         <v-container fluid>
@@ -69,7 +72,8 @@ export default {
     Employe
   },
   data: () => ({
-    idemploye: 14985,
+    //idemploye: 10206,
+    idemploye: 7,
     //idemploye: 0,
     id: 0,
     justify: [
@@ -90,7 +94,12 @@ export default {
 </script>
 
 <style>
-  .actions button {
-    border-radius: 4px;
-  }
+.actions button {
+  border-radius: 4px;
+}
+.modif_info {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10pt; 
+  font-style: italic;
+}
 </style>
