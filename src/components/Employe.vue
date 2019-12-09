@@ -342,6 +342,7 @@
             ></v-select>
           </v-flex>
 
+<!--
           <v-flex xs12 sm4 md4> 
             <v-text-field
               v-model="manager"
@@ -360,6 +361,32 @@
                       <v-icon v-on="on">mdi-account</v-icon>
                   </template>
                 </employe-search>
+              </template>
+            </v-text-field>
+          </v-flex>
+-->        
+          <v-flex xs12 sm4 md4>
+            <v-text-field
+              v-model="manager"
+              :label="$t('userInterface.Manager')"
+              readonly
+            >
+              <template v-slot:append>
+                <v-dialog v-model="show_employee_search" max-width="60%" :fullscreen="false" :scrollable="false" class="employe-search">
+                  <template v-slot:activator="{ on }">
+                    <v-icon v-on="on">mdi-account</v-icon>
+                  </template>
+                  <employe-search
+                    id="employe-search"
+                    v-model="show_employee_search"
+                    :fullscreen="false"
+                    :multi="false"
+                    :json="true"
+                    :get_data_url="get_data_url"
+                    @selection_ready="setManager"
+                  >
+                  </employe-search>
+                </v-dialog>
               </template>
             </v-text-field>
           </v-flex>
@@ -392,7 +419,7 @@
         <v-layout wrap class="modif_info">
           <slot name="infos" v-bind:props="{ employee }">
             <v-flex>
-              {{`Créé le ${this.formatDate(employee.datecreated)} par ${this.creator}. Dernière modification le ${this.formatDate(employee.datelastmodif)} par ${this.lastmodifuser}`}}
+              {{`Créé le ${this.formatDate(employee.datecreated)} par ${this.creator}. `}} {{(employee.datelastmodif != null) ? `Dernière modification le ${this.formatDate(employee.datelastmodif)} par ${this.lastmodifuser}` : ''}}
             </v-flex>
           </slot>
         </v-layout>
@@ -478,6 +505,7 @@ export default {
     type_msg: 'warning',
     show_msg: false,
     show_prof_data: true,
+    show_employee_search: false,
     show_comment: true,
     valid: true,
     rules: {
