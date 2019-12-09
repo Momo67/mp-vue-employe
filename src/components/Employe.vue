@@ -312,7 +312,7 @@
             <v-text-field
               v-model="employee.loginnt"
               :rules="[rules.required,rules.loginnt]"
-              counter="40"
+              counter="60"
               :label="$t('userInterface.LoginNT')"
               required
               clearable
@@ -323,7 +323,7 @@
             <v-text-field
               v-model="employee.exchangelogin"
               :rules="[]"
-              counter="40"
+              counter="60"
               :label="$t('userInterface.ExchangeLogin')"
               clearable
             ></v-text-field>
