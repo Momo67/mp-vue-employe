@@ -312,7 +312,7 @@
             <v-text-field
               v-model="employee.loginnt"
               :rules="[rules.required,rules.loginnt]"
-              counter="30"
+              counter="40"
               :label="$t('userInterface.LoginNT')"
               required
               clearable
@@ -323,7 +323,7 @@
             <v-text-field
               v-model="employee.exchangelogin"
               :rules="[]"
-              counter="30"
+              counter="40"
               :label="$t('userInterface.ExchangeLogin')"
               clearable
             ></v-text-field>
@@ -536,7 +536,7 @@ export default {
         return pattern.test(value) || 'Valeur invalide'
       },
       loginnt: value => {
-        const pattern = /^((LAUSANNE_CH|TRX)\\[a-zA-Z_*-]{1,5}|[a-zA-Z_*-]{1,5})\d*[a-zA-Z_*-]*\*?$/
+        const pattern = /^((LAUSANNE_CH|TRX)\\[a-zA-Z_*-]{1,6}|[a-zA-Z_*-]{1,6})\d*[a-zA-Z_*-]*|[0-9a-zA-Z_*-]{1,40}\*?$/
         return pattern.test(value) || 'Valeur invalide'
       },
       isactive: value => {
