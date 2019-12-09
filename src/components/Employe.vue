@@ -342,29 +342,6 @@
             ></v-select>
           </v-flex>
 
-<!--
-          <v-flex xs12 sm4 md4> 
-            <v-text-field
-              v-model="manager"
-              :label="$t('userInterface.Manager')"
-              readonly
-            >
-              <template v-slot:append>
-                <employe-search id="employe-search"
-                  :fullscreen="false"
-                  :multi="false"
-                  :json="true"
-                  :get_data_url="get_data_url"
-                  @selection_ready="setManager"
-                >
-                  <template v-slot:activator="{ on }">
-                      <v-icon v-on="on">mdi-account</v-icon>
-                  </template>
-                </employe-search>
-              </template>
-            </v-text-field>
-          </v-flex>
--->        
           <v-flex xs12 sm4 md4>
             <v-text-field
               v-model="manager"
