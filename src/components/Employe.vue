@@ -406,7 +406,7 @@
             <v-container >
               <v-row justify="end">
                 <v-col cols="1">
-                  <v-btn color="success" @click="save">Sauver</v-btn>
+                  <v-btn text color="info" @click="save">{{$t('userInterface.saveBtn')}}</v-btn>
                 </v-col>
               </v-row>
             </v-container>

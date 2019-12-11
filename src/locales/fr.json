@@ -1,6 +1,7 @@
 {
   "fr": {
     "userInterface": {
+      "saveBtn": "Sauver",
       "alertMsg": "Vous devez entrer au moins un critère!",
       "searchBtn": "Rechercher",
       "search": "Recherche...",
