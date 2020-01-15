@@ -544,7 +544,7 @@ export default {
         return pattern.test(value) || 'Valeur invalide'
       },
       commentaire: value => {
-        const pattern = /null|^[0-9a-zA-Zéèêëôöäàâüûîïç'"\s-]*$/
+        const pattern = /null|^[0-9a-zA-Zéèêëôöäàâüûîïç'".\s-]*$/
         return pattern.test(value) || 'Valeur invalide'
       },
       id: value => {
