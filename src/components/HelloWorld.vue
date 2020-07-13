@@ -164,7 +164,7 @@ export default {
   methods: {
     update () {
       console.log('### update id: ', this.value)
-      this.$emit('input', this.value+1)
+      this.$emit('input', this.value+10)
     }
   }
 };
