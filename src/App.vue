@@ -15,7 +15,7 @@
       </v-btn>
     </v-app-bar>
 
-    <v-content>
+    <v-main>
       <HelloWorld
         v-model="id"
       ></HelloWorld>
@@ -57,7 +57,7 @@
           </v-row>
         </v-container>
       </v-system-bar>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 

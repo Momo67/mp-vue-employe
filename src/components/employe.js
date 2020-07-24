@@ -150,18 +150,20 @@ class Employe {
       params: params
     }).then(response => {
       let __retval = response.data
-      callback(__retval)
-
-      log.l('## in Employe::checkRight retval: ', __retval)
+      log.l('## in Employe::checkRights retval: ', __retval)
+      
+      return callback(__retval)
     }).catch(error => {
       if (error.response) {
-        log.e(`## in Employe::checkRight Error data: ${error.response.data}, status: ${error.response.status}, headers: ${error.response.headers}`)
+        log.e(`## in Employe::checkRights Error data: ${error.response.data}, status: ${error.response.status}, headers: ${error.response.headers}`)
       } else if (error.request) {
-        log.e(`## in Employe::checkRight Error request: `, error.request)
+        log.e(`## in Employe::checkRights Error request: `, error.request)
       } else {
-        log.e(`## in Employe::checkRight Error: `, error.message)
+        log.e(`## in Employe::checkRights Error: `, error.message)
       }
-      log.e(`## in Employe::checkRight Error: `, error.config)
+      log.e(`## in Employe::checkRights Error: `, error.config)
+      
+      return 0
     })
   }
 

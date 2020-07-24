@@ -708,12 +708,6 @@ export default {
         this.manager = data[0].Nom + ' ' + data[0].Prenom
       })
     },
-    checkRights() {
-      EMPLOYE.checkRights({idempeditor: this.employee.idempeditor, idemployetoedit: this.employee.idemploye, idou: this.employee.idou}, this.get_data_url.employee_url, (data) => {
-        log.l('## in Employe::checkRights RetCode: ', data.RetCode)
-        return (data.RetCode != 0)
-      })
-    },
     save() {
       if (!this.$refs.form_data.validate()) {
         this.show_prof_data = true
@@ -721,15 +715,30 @@ export default {
         this.displayMessage('Veuillez corriger les champs invalides avant de pouvoir sauver!', MSG_LEVEL.WARNING)
       }
       else {
-        EMPLOYE.save(this.employee, this.get_data_url.employee_url, (data) => {
-          if (data.error) {
-            this.displayMessage(`<div>Une erreur s'est produite pendant la sauvegarde!</div><div>${data.error.reason}</div>`, MSG_LEVEL.ERROR)
+        EMPLOYE.checkRights({idempeditor: this.employee.idempeditor, idemployetoedit: this.employee.idemploye, idou: this.employee.idou}, this.get_data_url.employee_url, (data) => {
+          console.log('### checkRights data.error: ', data.error)
+          if (data.error !== undefined) {
+            this.displayMessage(`<div>Une erreur s'est produite lors de l'appel de checkRights!</div><div>${data.error.reason}</div>`, MSG_LEVEL.ERROR)
           } else {
-            if (data.success) {
-              this.employee.idemploye = parseInt(data.success.retval.idemploye)
-              this.$emit('input', this.employee.idemploye)
-              this.$emit('done', this.employee.idemploye)
-              this.displayMessage(`<div>Sauvegarde réussie!</div><div>idemploye: ${data.success.retval.idemploye}</div>`, MSG_LEVEL.SUCCESS)
+            if (data.RetCode) {
+              log.l('## in Employe::checkRights RetCode: ', data.RetCode)
+              if (data.RetCode > 0) {
+                EMPLOYE.save(this.employee, this.get_data_url.employee_url, (data) => {
+                  if (data.error) {
+                    this.displayMessage(`<div>Une erreur s'est produite pendant la sauvegarde!</div><div>${data.error.reason}</div>`, MSG_LEVEL.ERROR)
+                  } else {
+                    if (data.success) {
+                      this.employee.idemploye = parseInt(data.success.retval.idemploye)
+                      this.$emit('input', this.employee.idemploye)
+                      this.$emit('done', this.employee.idemploye)
+                      this.displayMessage(`<div>Sauvegarde réussie!</div><div>idemploye: ${data.success.retval.idemploye}</div>`, MSG_LEVEL.SUCCESS)
+                    }
+                  }
+                })
+              }
+            }
+            else {
+              this.displayMessage(`<div>Vous n'avez pas les droits suffisants pour éditer cet employé!</div><div>RetCode: ${data.RetCode}</div>`, MSG_LEVEL.ERROR)
             }
           }
         })
