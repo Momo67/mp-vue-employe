@@ -716,7 +716,6 @@ export default {
       }
       else {
         EMPLOYE.checkRights({idempeditor: this.employee.idempeditor, idemployetoedit: this.employee.idemploye, idou: this.employee.idou}, this.get_data_url.employee_url, (data) => {
-          console.log('### checkRights data.error: ', data.error)
           if (data.error !== undefined) {
             this.displayMessage(`<div>Une erreur s'est produite lors de l'appel de checkRights!</div><div>${data.error.reason}</div>`, MSG_LEVEL.ERROR)
           } else {
