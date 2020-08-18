@@ -578,13 +578,13 @@ export default {
         this.getEmpData(val)
     },
     'employee.prenom' (val) {
-      if (val !== null) {
-        this.employee.email = removeAccents(val) + '.' + ((this.employee.nom !== null) ? removeAccents(this.employee.nom) : '') + '@lausanne.ch'
+      if ((val !== '') && (val !== null)) {
+        this.employee.email = removeAccents(val) + (((this.employee.nom !== '') && (this.employee.nom !== null)) ? ('.' + removeAccents(this.employee.nom)) : '') + '@lausanne.ch'
       }
     },
     'employee.nom' (val) {
-      if (val !== null) {
-        this.employee.email = ((this.employee.prenom !== null) ? removeAccents(this.employee.prenom) : '') + '.' + removeAccents(val) + '@lausanne.ch'
+      if ((val !== '') && (val !== null)) {
+        this.employee.email = (((this.employee.prenom !== '') && (this.employee.prenom !== null)) ? (removeAccents(this.employee.prenom) + '.') : '') + removeAccents(val) + '@lausanne.ch'
       }
     },
     'employee.datenaissance' (val) {
