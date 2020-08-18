@@ -450,6 +450,9 @@ import EmployeSearch from 'mp-vue-employe-search'
 import Log from 'cgil-log'
 import {mask} from 'vue-the-mask'
 
+//import './latin'
+import { removeAccents } from './accents'
+
 const MODULE_NAME = 'Employe.vue'
 const log = (DEV) ? new Log(MODULE_NAME, 4) : new Log(MODULE_NAME, 2)
 
@@ -542,7 +545,7 @@ export default {
         return pattern.test(value) || 'Valeur invalide'
       },
       commentaire: value => {
-        const pattern = /null|^[0-9a-zA-Zéèêëôöäàâüûîïç'".\s-]*$/
+        const pattern = /null|^[\x21-\x7E\xC0-\xFF\s]*$/
         return pattern.test(value) || 'Valeur invalide'
       },
       id: value => {
@@ -573,7 +576,17 @@ export default {
         this.employee = Object.assign({}, EMPLOYEE_INIT)
       else
         this.getEmpData(val)
-  },
+    },
+    'employee.prenom' (val) {
+      if (val !== null) {
+        this.employee.email = removeAccents(val) + '.' + ((this.employee.nom !== null) ? removeAccents(this.employee.nom) : '') + '@lausanne.ch'
+      }
+    },
+    'employee.nom' (val) {
+      if (val !== null) {
+        this.employee.email = ((this.employee.prenom !== null) ? removeAccents(this.employee.prenom) : '') + '.' + removeAccents(val) + '@lausanne.ch'
+      }
+    },
     'employee.datenaissance' (val) {
       this.dateNaissanceCH = this.formatDate(val)
     },
