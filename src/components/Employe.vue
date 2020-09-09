@@ -513,7 +513,7 @@ export default {
         return pattern.test(value) || 'Valeur invalide'
       },
       initiales: value => {
-        const pattern = /null|^[a-zA-Z]{2,10}$/
+        const pattern = /null|^([a-zA-Z]{2,10})*$/
         return pattern.test(value) || 'Valeur invalide'
       },
       email: value => {
@@ -571,11 +571,19 @@ export default {
   }),
   watch: {
     value (val) {
-      this.employee.idemploye = val
-      if (val === 0)
+      if (val === -1) {
         this.employee = Object.assign({}, EMPLOYEE_INIT)
-      else
+        this.creator = ''
+        this.lastmodifuser = ''
+        this.$emit('input', 0)
+      } /* else if (val === -1) {
+        this.employee = Object.assign({}, EMPLOYEE_INIT)
+        this.$refs.form_data.reset()
+      }*/
+      else if (val !== 0) {
+        this.employee.idemploye = val
         this.getEmpData(val)
+      }
     },
     'employee.prenom' (val) {
       if ((val !== '') && (val !== null)) {
@@ -591,9 +599,13 @@ export default {
       this.dateNaissanceCH = this.formatDate(val)
     },
     dateNaissanceCH (val) {
-      if ((val !== null) && (val.length == 10)) {
+      if (/null|^\d{2}\.\d{2}\.(19|20)\d{2}$/.test(val))
+        this.employee.datenaissance = this.parseDate(val)
+      /*
+      if ((val !== null) && (val !== undefined) && (val.length == 10)) {
         this.employee.datenaissance = this.parseDate(val)
       }
+      */
     },
     'employee.debutactiv' (val) {
       this.dateDebutActivCH = this.formatDate(val)
@@ -607,9 +619,13 @@ export default {
       }
     },
     dateDebutActivCH (val) {
+      if (/null|^\d{2}\.\d{2}\.(19|20)\d{2}$/.test(val))
+        this.employee.debutactiv = this.parseDate(val)
+      /*        
       if ((val !== null) && (val.length == 10)) {
         this.employee.debutactiv = this.parseDate(val)
       }
+     */        
     },
     'employee.finactiv' (val) {
       this.dateFinActivCH = this.formatDate(val)
@@ -623,9 +639,13 @@ export default {
       }
     },
     dateFinActivCH (val) {
+      if (/null|^\d{2}\.\d{2}\.(19|20)\d{2}$/.test(val))
+        this.employee.finactiv = this.parseDate(val)
+      /*        
       if ((val !== null) && (val.length == 10)) {
         this.employee.finactiv = this.parseDate(val)
       }
+      */
     },
     'employee.idpolitesse': function (val) {
       if (val !== null) {
@@ -640,6 +660,10 @@ export default {
       if (!val) return null
       this.employee.loginnt = val.toUpperCase()
       this.employee.exchangelogin = val
+    },
+    'employee.idmanager': function (val) {
+      if (val === null)
+      this.manager = ''
     }
   },
   methods: {

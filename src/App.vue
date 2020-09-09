@@ -21,7 +21,6 @@
       ></HelloWorld>
       <employe
         v-model="idemploye"
-        @change="setEmploye"
       >
       <!--
         <template v-slot:actions="{ on: { save, validate, setVal  }, props: { employee, valid } }">
@@ -45,8 +44,12 @@
           </v-container>
         </template>
       -->
-        <template v-slot:infos="{ props: { employee }}"></template>
+        <template v-slot:infos="{ props: { employee }}">{{ employee }}</template>
       </employe>
+      <v-row>
+        <v-col lg="1"><v-btn color="info" @click="onReset">Reset</v-btn></v-col>
+        <v-col lg="1"><v-btn color="info" @click="setEmploye(10307)">Set</v-btn></v-col>
+      </v-row>
       <v-system-bar dark color="primary">
         <v-container fluid>
           <v-row>
@@ -72,7 +75,7 @@ export default {
     Employe
   },
   data: () => ({
-    idemploye: 0,//10307,
+    idemploye: 10958,//10307,
     //idemploye: 0,
     id: 0,
     justify: [
@@ -86,7 +89,11 @@ export default {
   }),
   methods: {
     setEmploye (idemploye) {
-      console.log("### idemploye: ", idemploye)
+      this.idemploye = idemploye
+    },
+    onReset () {
+      //this.idemploye = 0
+      this.idemploye = -1
     }
   }
 };
