@@ -47,7 +47,8 @@
         <template v-slot:infos="{ props: { employee }}">{{ employee }}</template>
       </employe>
       <v-row>
-        <v-col lg="1"><v-btn color="info" @click="onReset">Reset</v-btn></v-col>
+        <v-col lg="1"><v-btn color="info" @click="onReset(-1)">RST to -1</v-btn></v-col>
+        <v-col lg="1"><v-btn color="info" @click="onReset(0)">RST to 0</v-btn></v-col>
         <v-col lg="1"><v-btn color="info" @click="setEmploye(10307)">Set</v-btn></v-col>
       </v-row>
       <v-system-bar dark color="primary">
@@ -91,9 +92,9 @@ export default {
     setEmploye (idemploye) {
       this.idemploye = idemploye
     },
-    onReset () {
+    onReset (val) {
       //this.idemploye = 0
-      this.idemploye = -1
+      this.idemploye = val
     }
   }
 };

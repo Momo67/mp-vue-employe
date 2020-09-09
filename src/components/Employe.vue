@@ -571,16 +571,13 @@ export default {
   }),
   watch: {
     value (val) {
-      if (val === -1) {
-        this.employee = Object.assign({}, EMPLOYEE_INIT)
-        this.creator = ''
-        this.lastmodifuser = ''
-        this.$emit('input', 0)
-      } /* else if (val === -1) {
-        this.employee = Object.assign({}, EMPLOYEE_INIT)
+      this.employee = Object.assign({}, EMPLOYEE_INIT)
+      this.creator = ''
+      this.lastmodifuser = ''
+
+      if (val === 0) {
         this.$refs.form_data.reset()
-      }*/
-      else if (val !== 0) {
+      } else if (val > 0) {
         this.employee.idemploye = val
         this.getEmpData(val)
       }
@@ -601,11 +598,6 @@ export default {
     dateNaissanceCH (val) {
       if (/null|^\d{2}\.\d{2}\.(19|20)\d{2}$/.test(val))
         this.employee.datenaissance = this.parseDate(val)
-      /*
-      if ((val !== null) && (val !== undefined) && (val.length == 10)) {
-        this.employee.datenaissance = this.parseDate(val)
-      }
-      */
     },
     'employee.debutactiv' (val) {
       this.dateDebutActivCH = this.formatDate(val)
@@ -621,11 +613,6 @@ export default {
     dateDebutActivCH (val) {
       if (/null|^\d{2}\.\d{2}\.(19|20)\d{2}$/.test(val))
         this.employee.debutactiv = this.parseDate(val)
-      /*        
-      if ((val !== null) && (val.length == 10)) {
-        this.employee.debutactiv = this.parseDate(val)
-      }
-     */        
     },
     'employee.finactiv' (val) {
       this.dateFinActivCH = this.formatDate(val)
@@ -641,11 +628,6 @@ export default {
     dateFinActivCH (val) {
       if (/null|^\d{2}\.\d{2}\.(19|20)\d{2}$/.test(val))
         this.employee.finactiv = this.parseDate(val)
-      /*        
-      if ((val !== null) && (val.length == 10)) {
-        this.employee.finactiv = this.parseDate(val)
-      }
-      */
     },
     'employee.idpolitesse': function (val) {
       if (val !== null) {
@@ -671,12 +653,6 @@ export default {
       this[field] = this.formatDate(date)
     },
     setVal () {
-      this.employee.isactive = 1
-      this.employee.idou = 153
-      this.employee.idfonction = 26
-      this.employee.datenaissance = '1967-02-20'
-      //this.getManagerName(10958)
-      this.employee.initiales = 'MP'
     },
     initialize () {
       this.employee = Object.assign({}, EMPLOYEE_INIT)
