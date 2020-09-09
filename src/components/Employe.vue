@@ -425,6 +425,7 @@
           prominent
           dismissible
           class="alert"
+          @input="messageCallback"
         >
           <template v-slot:default>
             <div v-html="message"></div>
@@ -482,6 +483,7 @@ export default {
     message: '',
     type_msg: 'warning',
     show_msg: false,
+    messageCallback: undefined,
     show_prof_data: true,
     show_employee_search: false,
     show_comment: true,
@@ -740,8 +742,9 @@ export default {
                     if (data.success) {
                       this.employee.idemploye = parseInt(data.success.retval.idemploye)
                       this.$emit('input', this.employee.idemploye)
-                      this.$emit('done', this.employee.idemploye)
-                      this.displayMessage(`<div>Sauvegarde réussie!</div><div>idemploye: ${data.success.retval.idemploye}</div>`, MSG_LEVEL.SUCCESS)
+                      this.displayMessage(`<div>Sauvegarde réussie!</div><div>idemploye: ${data.success.retval.idemploye}</div>`, MSG_LEVEL.SUCCESS, () => {
+                        this.$emit('done', this.employee.idemploye)
+                      })
                     }
                   }
                 })
@@ -767,10 +770,11 @@ export default {
       const [day, month, year] = date.split('.')
       return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
     },
-    displayMessage (message, level) {
+    displayMessage (message, level, callback=null) {
       this.message = message
       this.type_msg = level
       this.show_msg = true
+      this.messageCallback = callback
     }
   },
   created () {
