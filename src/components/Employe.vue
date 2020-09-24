@@ -642,8 +642,11 @@ export default {
     },
     'employee.loginnt': function (val) {
       if (!val) return null
-      this.employee.loginnt = val.toUpperCase()
-      this.employee.exchangelogin = val
+      if (/^LAUSANNE_CH\\/.test(val))
+        this.employee.loginnt = val.toUpperCase()
+      else
+        this.employee.loginnt = 'LAUSANNE_CH\\' + val.toUpperCase()
+      this.employee.exchangelogin = this.employee.loginnt
     },
     'employee.idmanager': function (val) {
       if (val === null)

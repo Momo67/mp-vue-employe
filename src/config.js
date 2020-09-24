@@ -27,7 +27,7 @@ export const EMPLOYEE_INIT = {
   finactiv: null,
   isactive: null,
   codezadig: null,
-  loginnt: 'LAUSANNE_CH\\',
+  loginnt: null,
   exchangelogin: null,
   idmanager: null,
   idcreator: null,
