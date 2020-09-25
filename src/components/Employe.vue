@@ -141,14 +141,16 @@
             :items="orgunits"
             color="primary"
             hide-no-data
-            item-text="Description"
+            item-text="DescTreeDenorm"
             item-value="IdOrgUnit"
             :label="$t('userInterface.OrgUnit')"
             :placeholder="$t('userInterface.SearchHint')"
             autocomplete="something-new"
             required
             clearable
-          ></v-autocomplete>
+          >
+            <template v-slot:selection="{ item }">{{ item.DescTreeDenorm }}</template>
+          </v-autocomplete>
         </v-flex>
 
         <v-flex xs12 sm4 md4>
