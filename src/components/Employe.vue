@@ -579,7 +579,10 @@ export default {
       this.creator = ''
       this.lastmodifuser = ''
 
-      if (val === 0) {
+      if (val === -1) {
+        this.$refs.form_data.validate()
+        this.employee.idemploye = 0
+      } else if (val === 0) {
         this.$refs.form_data.reset()
       } else if (val > 0) {
         this.employee.idemploye = val
@@ -727,6 +730,7 @@ export default {
       })
     },
     save() {
+      console.log('### employee.idemploye: ', this.employee.idemploye)
       if (!this.$refs.form_data.validate()) {
         this.show_prof_data = true
         this.show_comment = true
