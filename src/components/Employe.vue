@@ -730,7 +730,6 @@ export default {
       })
     },
     save() {
-      console.log('### employee.idemploye: ', this.employee.idemploye)
       if (!this.$refs.form_data.validate()) {
         this.show_prof_data = true
         this.show_comment = true
