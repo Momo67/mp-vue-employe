@@ -412,7 +412,7 @@
                 </v-tooltip>
               </span>
             </span>
-            <vspan v-else>Conditions d'utilisation : -</vspan>
+            <span v-else>Conditions d'utilisation : -</span>
             <div class="ml-4" v-if="show_cond"  v-html="acceptcond"></div>
             <br/>     
             {{`Créé le ${this.formatDate(employee.datecreated)} par ${this.creator}. `}} {{(employee.datelastmodif != null) ? `Dernière modification le ${this.formatDate(employee.datelastmodif)} par ${this.lastmodifuser}` : ''}}<br/>
@@ -611,12 +611,16 @@ export default {
     },
     'employee.prenom' (val) {
       if ((val !== '') && (val !== null)) {
-        this.employee.email = removeAccents(val) + (((this.employee.nom !== '') && (this.employee.nom !== null)) ? ('.' + removeAccents(this.employee.nom)) : '') + '@lausanne.ch'
+        if (this.employee.idemploye === 0) {
+          this.employee.email = removeAccents(val) + (((this.employee.nom !== '') && (this.employee.nom !== null)) ? ('.' + removeAccents(this.employee.nom)) : '') + '@lausanne.ch'
+        }
       }
     },
     'employee.nom' (val) {
       if ((val !== '') && (val !== null)) {
-        this.employee.email = (((this.employee.prenom !== '') && (this.employee.prenom !== null)) ? (removeAccents(this.employee.prenom) + '.') : '') + removeAccents(val) + '@lausanne.ch'
+        if (this.employee.idemploye === 0) {
+          this.employee.email = (((this.employee.prenom !== '') && (this.employee.prenom !== null)) ? (removeAccents(this.employee.prenom) + '.') : '') + removeAccents(val) + '@lausanne.ch'
+        }
       }
     },
     'employee.datenaissance' (val) {
