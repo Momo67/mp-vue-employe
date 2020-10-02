@@ -397,7 +397,25 @@
       <v-layout wrap class="modif_info">
         <slot name="infos" v-bind:props="{ employee }">
           <v-flex v-if="this.employee.idemploye != 0">
-            {{`Créé le ${this.formatDate(employee.datecreated)} par ${this.creator}. `}} {{(employee.datelastmodif != null) ? `Dernière modification le ${this.formatDate(employee.datelastmodif)} par ${this.lastmodifuser}` : ''}}
+            <span v-html="this.getAffaireSuivi(employee.idaffairesuiviutilisateur)"></span><br/>
+            {{((parseInt(employee.nbragendetosend) === 0) ? `Aucun` : `${employee.nbragendetosend}`) + ` agendé${(employee.nbragendetosend > 1) ? 's' : ''} à recevoir.`}}&nbsp;
+            {{((parseInt(employee.nbrcirculationtosend) === 0) ? `Aucune` : `${employee.nbrcirculationtosend}`) + ` circulation${(employee.nbrcirculationtosend > 1) ? 's' : ''} à recevoir.`}}<br/>
+            <span v-if="employee.dateacceptcond !== null">{{`Conditions d'utilisation acceptées le ${this.formatDate(employee.dateacceptcond)}`}}
+              <span v-if="acceptcond !== ''">
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on }">
+                    <v-btn x-small icon v-on="on" @click="show_cond = !show_cond">
+                      <v-icon>{{ show_cond ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>{{show_cond ? $t('userInterface.hideCondLog') : $t('userInterface.showCondLog')}}</span>
+                </v-tooltip>
+              </span>
+            </span>
+            <vspan v-else>Conditions d'utilisation : -</vspan>
+            <div class="ml-4" v-if="show_cond"  v-html="acceptcond"></div>
+            <br/>     
+            {{`Créé le ${this.formatDate(employee.datecreated)} par ${this.creator}. `}} {{(employee.datelastmodif != null) ? `Dernière modification le ${this.formatDate(employee.datelastmodif)} par ${this.lastmodifuser}` : ''}}<br/>
           </v-flex>
         </slot>
       </v-layout>
@@ -453,7 +471,6 @@ import EmployeSearch from 'mp-vue-employe-search'
 import Log from 'cgil-log'
 import {mask} from 'vue-the-mask'
 
-//import './latin'
 import { removeAccents } from './accents'
 
 const MODULE_NAME = 'Employe.vue'
@@ -489,11 +506,12 @@ export default {
     show_prof_data: true,
     show_employee_search: false,
     show_comment: true,
+    show_cond: false,
     valid: true,
     rules: {
       required: value => !!value || 'Champ obligatoire.',
       nomprenom: value => {
-        const pattern = /^[a-zA-Zéèêëôöäàâüûîïç'\s-]*$/
+        const pattern = /^[a-zA-Zéèêëôöäàâüûîïç'\s()-]*$/
         return pattern.test(value) || 'Valeur invalide'
       },
       date: value => {
@@ -567,6 +585,7 @@ export default {
     menuFinActiv: false,
     initiales: null,
     manager: '',
+    acceptcond: null,
     creator: '',
     lastmodifuser: '',
     orgunit: undefined,
@@ -578,6 +597,7 @@ export default {
       this.employee = Object.assign({}, EMPLOYEE_INIT)
       this.creator = ''
       this.lastmodifuser = ''
+      this.acceptcond = ''
 
       if (val === -1) {
         this.$refs.form_data.validate()
@@ -659,6 +679,12 @@ export default {
     }
   },
   methods: {
+    getAffaireSuivi (idaffaire) {
+      if (idaffaire !== null)
+        return `Affaire suivi de l'utilisateur: <a target='_blank' href='/goeland/affaire2/affaire_data.php?idaffaire=$(idaffaire)'>${idaffaire}</a>`
+      else
+        return `Pas d'affaire suivi de l'utilisateur`
+    },
     setDateCH (field, date) {
       this[field] = this.formatDate(date)
     },
@@ -708,25 +734,35 @@ export default {
           this.getEmpCreator(this.employee.idcreator)
         if (this.employee.idlastmodifuser != null)
           this.getLastModifUser(this.employee.idlastmodifuser)
+        this.getEmpAcceptCondLog(this.employee.idemploye)
       })
     },
     getEmpCreator (idemploye) {
       let __empname = ''
       EMPLOYE.getEmpName(idemploye, this.get_data_url.employee_url, (data) => {
-        __empname = data[0].Nom.toUpperCase() + ' ' + data[0].Prenom
+        __empname = data.Nom.toUpperCase() + ' ' + data.Prenom
         this.creator = __empname
       })
     },
     getLastModifUser (idemploye) {
       let __empname = ''
       EMPLOYE.getEmpName(idemploye, this.get_data_url.employee_url, (data) => {
-        __empname = data[0].Nom.toUpperCase() + ' ' + data[0].Prenom
+        __empname = data.Nom.toUpperCase() + ' ' + data.Prenom
         this.lastmodifuser = __empname
       })
     },
     getManagerName (idemploye) {
       EMPLOYE.getEmpName(idemploye, this.get_data_url.employee_url, (data) => {
-        this.manager = data[0].Nom + ' ' + data[0].Prenom
+        this.manager = data.Nom + ' ' + data.Prenom
+      })
+    },
+    getEmpAcceptCondLog (idemploye) {
+      EMPLOYE.getEmpAcceptCondLog(idemploye, this.get_data_url.employee_url, (data) => {
+        let __log = ''
+        for (var log of data) {
+          __log += `${(log.reponse == 'accepter') ? 'acceptées' : 'refusées'} le ${log.datereponse}<br/>`
+        }
+        this.acceptcond = __log
       })
     },
     save() {

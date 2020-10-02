@@ -112,6 +112,27 @@ class Employe {
     })
   }
 
+  getEmpAcceptCondLog(idemploye, get_data_url, callback) {
+    let __fetch_url = `${get_data_url}/employe_get_acceptcond_log.php`
+    axios.post(__fetch_url, {
+      idemploye: idemploye
+    }).then(response => {
+      let __retval = response.data
+      callback(__retval)
+
+      log.l('## in Employe::getEmpAcceptCondLog retval: ', __retval)
+    }).catch(error => {
+      if (error.response) {
+        log.e(`## in Employe::getEmpAcceptCondLog Error data: ${error.response.data}, status: ${error.response.status}, headers: ${error.response.headers}`)
+      } else if (error.request) {
+        log.e(`## in Employe::getEmpAcceptCondLog Error request: `, error.request)
+      } else {
+        log.e(`## in Employe::getEmpAcceptCondLog Error: `, error.message)
+      }
+      log.e(`## in Employe::getEmpAcceptCondLog Error: `, error.config)
+    })
+  }
+
   getFonctionList(get_data_url, callback) {
     let __fetch_url = `${get_data_url}/employe_get_fonction.php`
     axios.post(__fetch_url, {}).then(response => {

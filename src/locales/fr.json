@@ -43,7 +43,9 @@
       "Comment": "Commentaire",
       "hideProfData": "Cacher les données professionnelles",
       "showComment":"Afficher le commentaire",
-      "hideComment": "Cacher le commentaire"
+      "hideComment": "Cacher le commentaire",
+      "showCondLog": "Afficher le log",
+      "hideCondLog": "Cacher le log"
     }
   }
 }
