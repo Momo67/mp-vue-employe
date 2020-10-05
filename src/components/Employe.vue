@@ -40,7 +40,23 @@
             clearable
           ></v-text-field>
         </v-flex>
+<!--        
+      </v-layout>
 
+      <v-layout wrap justify-end align-end>
+        <v-flex shrink>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+              <v-btn icon v-on="on" @click="show_perso_data = !show_perso_data">
+                <v-icon>{{ show_perso_data ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
+              </v-btn>
+            </template>
+            <span>{{show_perso_data ? $t('userInterface.hidePersoData') : $t('userInterface.showPersoData')}}</span>
+          </v-tooltip>
+        </v-flex>
+      </v-layout>
+      <v-layout wrap v-show="show_perso_data">
+-->        
         <v-flex xs12 sm4 md4> 
           <v-text-field
             v-model="dateNaissanceCH"
@@ -139,13 +155,14 @@
             v-model="employee.idou"
             :rules="[rules.required]"
             :items="orgunits"
-            color="primary"
-            hide-no-data
             item-text="DescTreeDenorm"
             item-value="IdOrgUnit"
+            :search-input="ouSearch"
             :label="$t('userInterface.OrgUnit')"
             :placeholder="$t('userInterface.SearchHint')"
             autocomplete="something-new"
+            hide-no-data
+            color="primary"
             required
             clearable
           >
@@ -317,6 +334,7 @@
             :label="$t('userInterface.LoginNT')"
             required
             clearable
+            @blur="onLoginNTBlur"
           ></v-text-field>
         </v-flex>
 
@@ -503,6 +521,7 @@ export default {
     type_msg: 'warning',
     show_msg: false,
     messageCallback: undefined,
+    show_perso_data: false,
     show_prof_data: true,
     show_employee_search: false,
     show_comment: true,
@@ -590,6 +609,7 @@ export default {
     lastmodifuser: '',
     orgunit: undefined,
     orgunits: [],
+    ouSearch: '',
     fonctions: []
   }),
   watch: {
@@ -600,6 +620,7 @@ export default {
       this.acceptcond = ''
 
       if (val === -1) {
+        this.employee.idfonction = '4'    // Pas saisie
         this.$refs.form_data.validate()
         this.employee.idemploye = 0
       } else if (val === 0) {
@@ -769,6 +790,23 @@ export default {
         this.acceptcond = __log
       })
     },
+    getEmpADInfo (samaccountname) {
+      EMPLOYE.getEmpADInfo(samaccountname, this.get_data_url.employee_url, (data) => {
+        if (data.count !== 0) {
+          const empinfo = data[0]
+          this.employee.idpolitesse = (this.employee.idpolitesse == null) ? ((empinfo.title[0] === 'M.') ? '1' : '2') : this.employee.idpolitesse
+          this.employee.nom = (this.employee.nom == '') ? empinfo.sn[0] : this.employee.nom
+          this.employee.prenom = (this.employee.prenom == '') ? empinfo.givenname[0] : this.employee.prenom
+          //this.employee.email = (this.employee.email == '') ? empinfo.mail[0] : this.employee.email
+          this.employee.email = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(empinfo.mail[0]) ? empinfo.mail[0] : this.employee.email
+          if(/^\+(\d{1,2})\s(\d{1,2})\s(\d{3})\s(\d{2})\s(\d{2})$/.test(empinfo.telephonenumber[0])) {
+            const [, , indicatif, part1, part2, part3] = /^\+(\d{1,2})\s(\d{1,2})\s(\d{3})\s(\d{2})\s(\d{2})$/.exec(empinfo.telephonenumber[0])
+            this.employee.telprof = (part1 === '315') ? `${part2} ${part3}` : `0${indicatif} ${part1} ${part2} ${part3}`
+          }
+          this.ouSearch = (empinfo.department.count !== 0) ? (empinfo.department[0]) : this.ouSearch
+        }
+      })
+    },
     save() {
       if (!this.$refs.form_data.validate()) {
         this.show_prof_data = true
@@ -823,6 +861,13 @@ export default {
       this.type_msg = level
       this.show_msg = true
       this.messageCallback = callback
+    },
+    onLoginNTBlur () {
+      if (this.employee.idemploye === 0) {
+        if ((this.employee.loginnt !== null) && (this.employee.loginnt !== '')) {
+          this.getEmpADInfo(this.employee.loginnt.split('\\')[1])
+        }  
+      }
     }
   },
   created () {

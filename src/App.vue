@@ -44,9 +44,7 @@
           </v-container>
         </template>
       -->
-      <!--
         <template v-slot:infos="{ props: { employee }}">{{ employee }}</template>
-      -->
       </employe>
       <v-row>
         <v-col lg="1"><v-btn color="info" @click="onReset(-1)">RST to -1</v-btn></v-col>
