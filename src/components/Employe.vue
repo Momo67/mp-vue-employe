@@ -6,6 +6,53 @@
   >
     <v-container grid-list-md>
       <v-layout wrap>
+        <v-flex xs12 sm4 md4> 
+          <v-textarea
+            v-model="employee.loginnt"
+            auto-grow
+            no-resize
+            rows="1"
+            :rules="[rules.required,rules.loginnt]"
+            counter="60"
+            :label="$t('userInterface.LoginNT')"
+            required
+            clearable
+          >
+            <template v-slot:append-outer v-if="employee.idemploye === 0">
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-icon v-on="on" :color="sam_status.color">{{sam_status.icon}}</v-icon>
+                </template>      
+                <span>{{sam_status.message}}</span>
+              </v-tooltip>
+            </template>
+          </v-textarea>
+        </v-flex>
+
+        <v-flex xs12 sm4 md4> 
+          <v-textarea
+            v-model="employee.exchangelogin"
+            auto-grow
+            no-resize
+            rows="1"
+            :rules="[]"
+            counter="60"
+            :label="$t('userInterface.ExchangeLogin')"
+            clearable
+          ></v-textarea>
+        </v-flex>
+
+        <v-flex xs12 sm4 md4>
+          <v-switch class="ml-4"
+            v-model="employee.isactive"
+            inset
+            true-value="1"
+            false-value="0"
+          >
+            <template v-slot:label>Actif: {{(employee.isactive === '1') ? 'oui' : 'non'}}</template>
+          </v-switch>
+        </v-flex>
+
         <v-flex xs12 sm4 md4>
           <v-select
             v-model="employee.idpolitesse"
@@ -40,103 +87,9 @@
             clearable
           ></v-text-field>
         </v-flex>
-<!--        
       </v-layout>
 
-      <v-layout wrap justify-end align-end>
-        <v-flex shrink>
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on }">
-              <v-btn icon v-on="on" @click="show_perso_data = !show_perso_data">
-                <v-icon>{{ show_perso_data ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
-              </v-btn>
-            </template>
-            <span>{{show_perso_data ? $t('userInterface.hidePersoData') : $t('userInterface.showPersoData')}}</span>
-          </v-tooltip>
-        </v-flex>
-      </v-layout>
-      <v-layout wrap v-show="show_perso_data">
--->        
-        <v-flex xs12 sm4 md4> 
-          <v-text-field
-            v-model="dateNaissanceCH"
-            :rules="[rules.date]"
-            :label="$t('userInterface.Birthdate')"
-            hint="jj.mm.aaaa"
-            @blur="employee.datenaissance = parseDate(dateNaissanceCH)"
-            v-mask="'##.##.####'"
-            clearable
-          >
-            <template v-slot:append>
-              <v-menu
-                ref="menuDateNaissance"
-                v-model="menuDateNaissance"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                max-width="290px"
-                min-width="290px"
-              >
-                <template v-slot:activator="{ on }">
-                    <v-icon v-on="on">mdi-calendar</v-icon>
-                </template>
-                <v-date-picker 
-                  v-model="employee.datenaissance" 
-                  :max="new Date().toISOString().substr(0, 10)"
-                  @input="menuDateNaissance = false" 
-                  @change="setDateCH('dateNaissanceCH', $event)"
-                  :first-day-of-week="1" 
-                  locale="fr">
-                </v-date-picker>
-              </v-menu>
-            </template>
-          </v-text-field>
-        </v-flex>
-
-        <v-flex xs12 sm4 md4> 
-          <v-text-field
-            v-model="employee.telprive"
-            :rules="[rules.telprive]"
-            :label="$t('userInterface.PrivatePhone')"
-            hint="0xx xxx xx xx"
-            v-mask="'### ### ## ##'"
-            clearable
-          ></v-text-field>
-        </v-flex>
-
-        <v-flex xs12 sm4 md4>&nbsp;</v-flex>
-
-        <v-flex xs12 sm4 md4> 
-          <v-text-field
-            v-model="employee.addresse"
-            :rules="[rules.addresse]"
-            :label="$t('userInterface.Address')"
-            counter="50"
-            clearable
-          ></v-text-field>
-        </v-flex>
-
-        <v-flex xs12 sm4 md4> 
-          <v-text-field
-            v-model="employee.codepostal"
-            :rules="[rules.codepostal]"
-            :label="$t('userInterface.PostalCode')"
-            clearable
-          ></v-text-field>
-        </v-flex>
-
-        <v-flex xs12 sm4 md4> 
-          <v-text-field
-            v-model="employee.localite"
-            :rules="[rules.localite]"
-            :label="$t('userInterface.Locality')"
-            counter="50"
-            clearable
-          ></v-text-field>
-        </v-flex>
-      </v-layout>
-
+<!--
       <v-layout wrap justify-end align-end>
         <v-flex shrink>
           <v-tooltip bottom>
@@ -149,6 +102,7 @@
           </v-tooltip>
         </v-flex>
       </v-layout>
+-->      
       <v-layout wrap v-show="show_prof_data">
         <v-flex xs12 sm4 md4>
           <v-autocomplete
@@ -317,48 +271,13 @@
           </v-text-field>
         </v-flex>
 
-        <v-flex xs12 sm4 md4>
+        <v-flex xs12 sm4 md4 v-show="false">
           <v-text-field
             v-model="employee.codezadig"
             :rules="[rules.codezadig]"
             :label="$t('userInterface.CodeZadig')"
             clearable
           ></v-text-field>
-        </v-flex>
-
-        <v-flex xs12 sm4 md4> 
-          <v-text-field
-            v-model="employee.loginnt"
-            :rules="[rules.required,rules.loginnt]"
-            counter="60"
-            :label="$t('userInterface.LoginNT')"
-            required
-            clearable
-            @blur="onLoginNTBlur"
-          ></v-text-field>
-        </v-flex>
-
-        <v-flex xs12 sm4 md4> 
-          <v-text-field
-            v-model="employee.exchangelogin"
-            :rules="[]"
-            counter="60"
-            :label="$t('userInterface.ExchangeLogin')"
-            clearable
-          ></v-text-field>
-        </v-flex>
-
-        <v-flex xs12 sm4 md4>
-          <v-select
-            v-model="employee.isactive"
-            :rules="[rules.required]"
-            item-text="etat"
-            item-value="id"
-            :items="[{id: '1', etat:'oui'}, {id: '0', etat:'non'}]"
-            :label="$t('userInterface.Active')"
-            required
-            clearable
-          ></v-select>
         </v-flex>
 
         <v-flex xs12 sm4 md4>
@@ -379,12 +298,105 @@
                   :multi="false"
                   :json="true"
                   :get_data_url="get_data_url"
-                  @selection_ready="setManager"
+                  @selection-ready="setManager"
                 >
                 </employe-search>
               </v-dialog>
             </template>
           </v-text-field>
+        </v-flex>
+      </v-layout>
+
+      <v-layout wrap justify-end align-end>
+        <v-flex shrink>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+              <v-btn icon v-on="on" @click="show_perso_data = !show_perso_data">
+                <v-icon>{{ show_perso_data ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
+              </v-btn>
+            </template>
+            <span>{{show_perso_data ? $t('userInterface.hidePersoData') : $t('userInterface.showPersoData')}}</span>
+          </v-tooltip>
+        </v-flex>
+      </v-layout>
+      <v-layout wrap v-show="show_perso_data">
+        <v-flex xs12 sm4 md4> 
+          <v-text-field
+            v-model="dateNaissanceCH"
+            :rules="[rules.date]"
+            :label="$t('userInterface.Birthdate')"
+            hint="jj.mm.aaaa"
+            @blur="employee.datenaissance = parseDate(dateNaissanceCH)"
+            v-mask="'##.##.####'"
+            clearable
+          >
+            <template v-slot:append>
+              <v-menu
+                ref="menuDateNaissance"
+                v-model="menuDateNaissance"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                transition="scale-transition"
+                offset-y
+                max-width="290px"
+                min-width="290px"
+              >
+                <template v-slot:activator="{ on }">
+                    <v-icon v-on="on">mdi-calendar</v-icon>
+                </template>
+                <v-date-picker 
+                  v-model="employee.datenaissance" 
+                  :max="new Date().toISOString().substr(0, 10)"
+                  @input="menuDateNaissance = false" 
+                  @change="setDateCH('dateNaissanceCH', $event)"
+                  :first-day-of-week="1" 
+                  locale="fr">
+                </v-date-picker>
+              </v-menu>
+            </template>
+          </v-text-field>
+        </v-flex>
+
+        <v-flex xs12 sm4 md4> 
+          <v-text-field
+            v-model="employee.telprive"
+            :rules="[rules.telprive]"
+            :label="$t('userInterface.PrivatePhone')"
+            hint="0xx xxx xx xx"
+            v-mask="'### ### ## ##'"
+            clearable
+          ></v-text-field>
+        </v-flex>
+
+        <v-flex xs12 sm4 md4>&nbsp;</v-flex>
+
+        <v-flex xs12 sm4 md4> 
+          <v-text-field
+            v-model="employee.addresse"
+            :rules="[rules.addresse]"
+            :label="$t('userInterface.Address')"
+            counter="50"
+            clearable
+          ></v-text-field>
+        </v-flex>
+
+        <v-flex xs12 sm4 md4> 
+          <v-text-field
+            v-model="employee.codepostal"
+            :rules="[rules.codepostal]"
+            :label="$t('userInterface.PostalCode')"
+            clearable
+          ></v-text-field>
+        </v-flex>
+
+        <v-flex xs12 sm4 md4> 
+          <v-text-field
+            v-model="employee.localite"
+            :rules="[rules.localite]"
+            :label="$t('userInterface.Locality')"
+            counter="50"
+            clearable
+          ></v-text-field>
         </v-flex>
       </v-layout>
 
@@ -479,7 +491,7 @@
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import '@mdi/font/css/materialdesignicons.css'
 
-import { DEV, ORGUNIT_INIT, EMPLOYEE_INIT } from '../config'
+import { DEV, ORGUNIT_INIT, EMPLOYEE_INIT, SAM_STATUS } from '../config'
 import { EMP_URL_AJAX, ORGUNIT_URL_AJAX } from '../config'
 import { employe as EMPLOYE } from './employe'
 import { orgunit as ORGUNIT } from './orgunit'
@@ -513,6 +525,21 @@ export default {
           employee_url: ''
       }),
       required: false
+    },
+    showProfData: {
+      type: Boolean,
+      default: true,
+      required: false
+    },
+    showPersoData: {
+      type: Boolean,
+      default: false,
+      required: false
+    },
+    showComment: {
+      type: Boolean,
+      default: false,
+      required: false
     }
   },
   data: () => ({
@@ -521,11 +548,12 @@ export default {
     type_msg: 'warning',
     show_msg: false,
     messageCallback: undefined,
-    show_perso_data: false,
     show_prof_data: true,
+    show_perso_data: false,
     show_employee_search: false,
     show_comment: true,
     show_cond: false,
+    sam_status: {},
     valid: true,
     rules: {
       required: value => !!value || 'Champ obligatoire.',
@@ -534,7 +562,7 @@ export default {
         return pattern.test(value) || 'Valeur invalide'
       },
       date: value => {
-        const pattern = /null|^\d{2}\.\d{2}\.(19|20)\d{2}$/
+        const pattern = /null|^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/
         return pattern.test(value) || 'Valeur invalide'
       },
       telprive: value => {
@@ -620,6 +648,7 @@ export default {
       this.acceptcond = ''
 
       if (val === -1) {
+        this.employee.isactive = '1'      // Actif: oui
         this.employee.idfonction = '4'    // Pas saisie
         this.$refs.form_data.validate()
         this.employee.idemploye = 0
@@ -697,6 +726,20 @@ export default {
       else
         this.employee.loginnt = 'LAUSANNE_CH\\' + val.toUpperCase()
       this.employee.exchangelogin = this.employee.loginnt
+
+      if (this.employee.idemploye === 0) {
+        this.sam_status = SAM_STATUS.INFO
+        if ((val !== null) && (val !== '')) {
+          let __samaccountname = val.split('\\')[1]
+          if (__samaccountname != undefined) {
+            setTimeout(() => {
+              if (__samaccountname.length >= 8) {
+                this.getEmpADInfo(__samaccountname)
+              }
+            }, 250)
+          }
+        }  
+      }
     },
     'employee.idmanager': function (val) {
       if (val === null)
@@ -718,8 +761,12 @@ export default {
     initialize () {
       this.employee = Object.assign({}, EMPLOYEE_INIT)
       this.orgunit = Object.assign({}, ORGUNIT_INIT)
+      this.sam_status = Object.assign({}, SAM_STATUS.INFO)
       this.get_data_url.orgunit_url = (this.get_data_url.orgunit_url === '') ? ORGUNIT_URL_AJAX : this.get_data_url.orgunit_url
       this.get_data_url.employee_url = (this.get_data_url.employee_url === '') ? EMP_URL_AJAX : this.get_data_url.employee_url
+      this.show_prof_data = this.showProfData
+      this.show_perso_data = this.showPersoData
+      this.show_comment = this.showComment
       this.getOUList()
       this.getFonctionList()
     },
@@ -744,7 +791,8 @@ export default {
       })
     },
     setManager(manager) {
-      if (JSON.parse(manager).length != 0) {
+      console.log('### manager: ', manager)
+      if (JSON.parse(manager).length !== 0) {
         let __manager = JSON.parse(manager)
         this.manager = __manager[0].nom + ' ' + __manager[0].prenom
         this.employee.idmanager = __manager[0].idemploye
@@ -793,17 +841,19 @@ export default {
     getEmpADInfo (samaccountname) {
       EMPLOYE.getEmpADInfo(samaccountname, this.get_data_url.employee_url, (data) => {
         if (data.count !== 0) {
-          const empinfo = data[0]
-          this.employee.idpolitesse = (this.employee.idpolitesse == null) ? ((empinfo.title[0] === 'M.') ? '1' : '2') : this.employee.idpolitesse
-          this.employee.nom = (this.employee.nom == '') ? empinfo.sn[0] : this.employee.nom
-          this.employee.prenom = (this.employee.prenom == '') ? empinfo.givenname[0] : this.employee.prenom
-          //this.employee.email = (this.employee.email == '') ? empinfo.mail[0] : this.employee.email
-          this.employee.email = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(empinfo.mail[0]) ? empinfo.mail[0] : this.employee.email
-          if(/^\+(\d{1,2})\s(\d{1,2})\s(\d{3})\s(\d{2})\s(\d{2})$/.test(empinfo.telephonenumber[0])) {
-            const [, , indicatif, part1, part2, part3] = /^\+(\d{1,2})\s(\d{1,2})\s(\d{3})\s(\d{2})\s(\d{2})$/.exec(empinfo.telephonenumber[0])
+          const __empinfo = data[0]
+          this.employee.idpolitesse = (__empinfo.title !== undefined) ? ((__empinfo.title[0] === 'M.') ? '1' : '2') : '1'
+          this.employee.nom = (__empinfo.sn !== undefined) ? __empinfo.sn[0] : ''
+          this.employee.prenom = (__empinfo.givenname !== undefined) ? __empinfo.givenname[0] : ''
+          this.employee.email = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(__empinfo.mail[0]) ? __empinfo.mail[0] : ''
+          if ((__empinfo.telephonenumber !== undefined) && (/^\+(\d{1,2})\s(\d{1,2})\s(\d{3})\s(\d{2})\s(\d{2})$/.test(__empinfo.telephonenumber[0]))) {
+            const [, , indicatif, part1, part2, part3] = /^\+(\d{1,2})\s(\d{1,2})\s(\d{3})\s(\d{2})\s(\d{2})$/.exec(__empinfo.telephonenumber[0])
             this.employee.telprof = (part1 === '315') ? `${part2} ${part3}` : `0${indicatif} ${part1} ${part2} ${part3}`
           }
-          this.ouSearch = (empinfo.department.count !== 0) ? (empinfo.department[0]) : this.ouSearch
+          this.ouSearch = (__empinfo.department.count !== 0) ? (__empinfo.department[0]) : this.ouSearch
+          this.sam_status = SAM_STATUS.SUCCESS
+        } else {
+          this.sam_status = SAM_STATUS.ERROR
         }
       })
     },
@@ -824,13 +874,15 @@ export default {
                 EMPLOYE.save(this.employee, this.get_data_url.employee_url, (data) => {
                   if (data.error) {
                     this.displayMessage(`<div>Une erreur s'est produite pendant la sauvegarde!</div><div>${data.error.reason}</div>`, MSG_LEVEL.ERROR)
-                  } else {
-                    if (data.success) {
-                      this.employee.idemploye = parseInt(data.success.retval.idemploye)
-                      this.$emit('input', this.employee.idemploye)
-                      this.displayMessage(`<div>Sauvegarde réussie!</div><div>idemploye: ${data.success.retval.idemploye}</div>`, MSG_LEVEL.SUCCESS, () => {
-                        this.$emit('done', this.employee.idemploye)
-                      })
+                  } else if (data.success) {
+                    this.employee.idemploye = parseInt(data.success.retval.idemploye)
+                    this.$emit('input', this.employee.idemploye)
+                    this.displayMessage(`<div>Sauvegarde réussie!</div><div>idemploye: ${data.success.retval.idemploye}</div>`, MSG_LEVEL.SUCCESS, () => {
+                      this.$emit('done', this.employee.idemploye)
+                    })
+                  } else if (data.warning) {
+                    if (data.warning.retval == 0) {
+                      this.displayMessage(`<div>Une erreur s'est produite pendant la sauvegarde!</div><div>Un employé avec ce loginnt existe déjà dans Goéland!</div>`, MSG_LEVEL.ERROR)
                     }
                   }
                 })
@@ -862,13 +914,6 @@ export default {
       this.show_msg = true
       this.messageCallback = callback
     },
-    onLoginNTBlur () {
-      if (this.employee.idemploye === 0) {
-        if ((this.employee.loginnt !== null) && (this.employee.loginnt !== '')) {
-          this.getEmpADInfo(this.employee.loginnt.split('\\')[1])
-        }  
-      }
-    }
   },
   created () {
     this.initialize()

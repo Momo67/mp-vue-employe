@@ -24,6 +24,8 @@
       "Address": "Address",
       "PostalCode": "Postal code",
       "Locality": "Locality",
+      "showPersoData": "Show personal data",
+      "hidePersoData": "Hide personal data",
       "showProfData": "Show professional data",
       "hideProfData": "Hide professional data",
       "Function": "",
@@ -45,7 +47,10 @@
       "showComment": "Show comment",
       "hideComment": "Hide comment",
       "showCondLog": "Show log",
-      "hideCondLog": "Hide log"
+      "hideCondLog": "Hide log",
+      "SAMStatusInfo": "SAM research status",
+      "SAMStatusSuccess": "Found!",
+      "SAMStatusError": "Not found!"
     }
   }
 }

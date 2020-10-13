@@ -38,3 +38,21 @@ export const EMPLOYEE_INIT = {
 export const ORGUNIT_INIT = {
   isactive: 1
 }
+
+export const SAM_STATUS = {
+  INFO: {
+    icon: 'mdi-account',
+    color: '',
+    message: 'Statut de la recherche dans la SAM'
+  },
+  ERROR: {
+    icon: 'mdi-account-cancel',
+    color: 'error',
+    message: 'Introuvable!'
+  },
+  SUCCESS: {
+    icon: 'mdi-account-check',
+    color: 'success',
+    message: 'Trouvé!'
+  }
+}

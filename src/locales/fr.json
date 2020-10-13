@@ -24,6 +24,8 @@
       "Address": "Adresse",
       "PostalCode": "Code postal",
       "Locality": "Localité",
+      "showPersoData": "Afficher les données personnelles",
+      "hidePersoData": "Cacher les données personnelles",
       "showProfData": "Afficher les données professionnelles",
       "hideProfData": "Cacher les données professionnelles",
       "OrgUnit": "Unité organisationnelle",
@@ -45,7 +47,10 @@
       "showComment":"Afficher le commentaire",
       "hideComment": "Cacher le commentaire",
       "showCondLog": "Afficher le log",
-      "hideCondLog": "Cacher le log"
+      "hideCondLog": "Cacher le log",
+      "SAMStatusInfo": "Statut de la recherche dans la SAM",
+      "SAMStatusSuccess": "Trouvé!",
+      "SAMStatusError": "Introuvable!"
     }
   }
 }
