@@ -12,11 +12,12 @@
   "dependencies": {
     "cgil-log": "^1.0.5",
     "core-js": "^2.6.11",
-    "mp-vue-employe-search": "^4.3.8",
+    "jquery": "^3.5.1",
+    "mp-vue-employe-search": "^4.3.9",
     "vue": "^2.6.12",
-    "vue-i18n": "^8.21.1",
+    "vue-i18n": "^8.22.0",
     "vue-the-mask": "^0.11.1",
-    "vuetify": "^2.3.10"
+    "vuetify": "^2.3.13"
   },
   "devDependencies": {
     "@kazupon/vue-i18n-loader": "^0.3.0",
@@ -30,7 +31,7 @@
     "eslint-plugin-vue": "^5.0.0",
     "jsonpath": "^1.0.2",
     "material-design-icons-iconfont": "^5.0.1",
-    "sass": "^1.26.11",
+    "sass": "^1.27.0",
     "sass-loader": "^7.1.0",
     "vue-cli-plugin-axios": "0.0.4",
     "vue-cli-plugin-i18n": "^0.6.1",
