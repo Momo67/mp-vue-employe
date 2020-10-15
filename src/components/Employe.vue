@@ -469,7 +469,7 @@
         width="550"
         hide-overlay
       >
-        <v-alert
+        <v-alert style="margin-bottom: 0px;"
           v-model="show_msg"
           :type="type_msg"
           prominent
@@ -931,9 +931,6 @@ export default {
 <style lang="css" scoped>
 .container {
   padding: 1px;
-}
-.alert {
-  margin-bottom: 0px;
 }
 </style>
 <style lang="css">
