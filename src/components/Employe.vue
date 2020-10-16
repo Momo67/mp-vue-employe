@@ -835,7 +835,8 @@ export default {
       EMPLOYE.getEmpAcceptCondLog(idemploye, this.get_data_url.employee_url, (data) => {
         let __log = ''
         for (var log of data) {
-          __log += `${(log.reponse == 'accepter') ? 'acceptées' : 'refusées'} le ${log.datereponse}<br/>`
+          //__log += `${(log.reponse == 'accepter') ? 'acceptées' : 'refusées'} le ${log.datereponse}<br/>`
+          __log += `${(log.reponse == 'accepter') ? '<div class=\'cond_acpt\'>acceptées' : '<div class=\'cond_ref\'>refusées'} le ${log.datereponse}</div>`
         }
         this.acceptcond = __log
       })
@@ -946,6 +947,12 @@ export default {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 10pt; 
   font-style: italic;
+}
+.cond_acpt {
+  color: black;
+}
+.cond_ref {
+  color: red;
 }
 </style>
 
