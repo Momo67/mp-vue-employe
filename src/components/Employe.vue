@@ -646,6 +646,7 @@ export default {
       this.creator = ''
       this.lastmodifuser = ''
       this.acceptcond = ''
+      this.show_cond = false
 
       if (val === -1) {
         this.employee.isactive = '1'      // Actif: oui
@@ -767,6 +768,7 @@ export default {
       this.show_prof_data = this.showProfData
       this.show_perso_data = this.showPersoData
       this.show_comment = this.showComment
+      this.show_cond = false
       this.getOUList()
       this.getFonctionList()
     },
