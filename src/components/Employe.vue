@@ -750,7 +750,7 @@ export default {
   methods: {
     getAffaireSuivi (idaffaire) {
       if (idaffaire !== null)
-        return `Affaire suivi de l'utilisateur: <a target='_blank' href='/goeland/affaire2/affaire_data.php?idaffaire=$(idaffaire)'>${idaffaire}</a>`
+        return `Affaire suivi de l'utilisateur: <a target='_blank' href='/goeland/affaire2/affaire_data.php?idaffaire=${idaffaire}'>${idaffaire}</a>`
       else
         return `Pas d'affaire suivi de l'utilisateur`
     },
@@ -835,7 +835,6 @@ export default {
       EMPLOYE.getEmpAcceptCondLog(idemploye, this.get_data_url.employee_url, (data) => {
         let __log = ''
         for (var log of data) {
-          //__log += `${(log.reponse == 'accepter') ? 'acceptées' : 'refusées'} le ${log.datereponse}<br/>`
           __log += `${(log.reponse == 'accepter') ? '<div class=\'cond_acpt\'>acceptées' : '<div class=\'cond_ref\'>refusées'} le ${log.datereponse}</div>`
         }
         this.acceptcond = __log
