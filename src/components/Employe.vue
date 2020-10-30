@@ -726,7 +726,6 @@ export default {
         this.employee.loginnt = val.toUpperCase()
       else
         this.employee.loginnt = 'LAUSANNE_CH\\' + val.toUpperCase()
-      this.employee.exchangelogin = this.employee.loginnt
 
       if (this.employee.idemploye === 0) {
         this.sam_status = SAM_STATUS.INFO
@@ -740,6 +739,7 @@ export default {
             }, 250)
           }
         }  
+        this.employee.exchangelogin = this.employee.loginnt
       }
     },
     'employee.idmanager': function (val) {
