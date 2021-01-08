@@ -793,7 +793,6 @@ export default {
       })
     },
     setManager(manager) {
-      console.log('### manager: ', manager)
       if (JSON.parse(manager).length !== 0) {
         let __manager = JSON.parse(manager)
         this.manager = __manager[0].nom + ' ' + __manager[0].prenom
