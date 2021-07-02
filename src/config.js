@@ -32,7 +32,7 @@ export const EMPLOYEE_INIT = {
   idmanager: null,
   idcreator: null,
   idlastmodifuser: null,
-  comment: null
+  commentaire: null
 }
 
 export const ORGUNIT_INIT = {
