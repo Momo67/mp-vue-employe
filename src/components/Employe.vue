@@ -722,7 +722,7 @@ export default {
     },
     'employee.loginnt': function (val) {
       if (!val) return null
-      if (/^LAUSANNE_CH\\/.test(val))
+      if (/^(LAUSANNE_CH|TRX)\\/.test(val))
         this.employee.loginnt = val.toUpperCase()
       else
         this.employee.loginnt = 'LAUSANNE_CH\\' + val.toUpperCase()
