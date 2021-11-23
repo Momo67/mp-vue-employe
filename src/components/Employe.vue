@@ -723,9 +723,9 @@ export default {
     'employee.loginnt': function (val) {
       if (!val) return null
       if (/^(LAUSANNE_CH|TRX)\\/.test(val))
-        this.employee.loginnt = val.toUpperCase()
+        this.employee.loginnt = val.replace(/(\r\n|\n|\r)/gm, "").toUpperCase()
       else
-        this.employee.loginnt = 'LAUSANNE_CH\\' + val.toUpperCase()
+        this.employee.loginnt = 'LAUSANNE_CH\\' + val.replace(/(\r\n|\n|\r)/gm, "").toUpperCase()
 
       if (this.employee.idemploye === 0) {
         this.sam_status = SAM_STATUS.INFO
