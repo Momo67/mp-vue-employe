@@ -606,7 +606,7 @@ export default {
         return pattern.test(value) || 'Valeur invalide'
       },
       loginnt: value => {
-        const pattern = /^((LAUSANNE_CH|TRX)\\[a-zA-Z_*-]{1,6}|[a-zA-Z_*-]{1,6})\d*[a-zA-Z_*-]*|[0-9a-zA-Z_*-]{1,40}\*?$/
+        const pattern = /^((LAUSANNE_CH|TRX)\\([a-zA-Z_-]{1,}\d{0,4})\*?)|([^XX_\\(LAUSANNE_CH|TRX)][a-zA-Z]{1,20})|(XX_[A-Z0-9]{8}-([A-Z0-9]{4}-){3}[A-Z0-9]{12})$/
         return pattern.test(value) || 'Valeur invalide'
       },
       isactive: value => {
@@ -722,10 +722,11 @@ export default {
     },
     'employee.loginnt': function (val) {
       if (!val) return null
+      val = val.replace(/(\r\n|\n|\r)/gm, "")
       if (/^(LAUSANNE_CH|TRX)\\/.test(val))
-        this.employee.loginnt = val.replace(/(\r\n|\n|\r)/gm, "").toUpperCase()
+        this.employee.loginnt = val.toUpperCase()
       else
-        this.employee.loginnt = 'LAUSANNE_CH\\' + val.replace(/(\r\n|\n|\r)/gm, "").toUpperCase()
+        this.employee.loginnt = 'LAUSANNE_CH\\' + val.toUpperCase()
 
       if (this.employee.idemploye === 0) {
         this.sam_status = SAM_STATUS.INFO
