@@ -45,8 +45,8 @@
         </template>
       -->
       <!--
-        <template v-slot:infos="{ props: { employee }}">{{ employee }}</template>
       -->
+        <template #infos="{ employee }">{{ employee.initiales }}</template>
       </employe>
       <v-row>
         <v-col lg="1"><v-btn color="info" @click="onReset(-1)">RST to -1</v-btn></v-col>
@@ -78,7 +78,7 @@ export default {
     Employe
   },
   data: () => ({
-    idemploye: 15262,//10307,
+    idemploye: 10958,//15262,//10307,
     //idemploye: 0,
     id: 0,
     justify: [
