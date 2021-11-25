@@ -425,12 +425,12 @@
       </v-layout>
 
       <v-layout wrap class="modif_info">
-        <slot name="infos" v-bind:props="{ employee }">
-          <v-flex v-if="this.employee.idemploye != 0">
-            <span v-html="this.getAffaireSuivi(employee.idaffairesuiviutilisateur)"></span><br/>
+        <slot name="infos" v-bind:employee="employee">
+          <v-flex v-if="employee.idemploye != 0">
+            <span v-html="getAffaireSuivi(employee.idaffairesuiviutilisateur)"></span><br/>
             {{((parseInt(employee.nbragendetosend) === 0) ? `Aucun` : `${employee.nbragendetosend}`) + ` agendé${(employee.nbragendetosend > 1) ? 's' : ''} à recevoir.`}}&nbsp;
             {{((parseInt(employee.nbrcirculationtosend) === 0) ? `Aucune` : `${employee.nbrcirculationtosend}`) + ` circulation${(employee.nbrcirculationtosend > 1) ? 's' : ''} à recevoir.`}}<br/>
-            <span v-if="employee.dateacceptcond !== null">{{`Conditions d'utilisation acceptées le ${this.formatDate(employee.dateacceptcond)}`}}
+            <span v-if="employee.dateacceptcond !== null">{{`Conditions d'utilisation acceptées le ${formatDate(employee.dateacceptcond)}`}}
               <span v-if="acceptcond !== ''">
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on }">
@@ -445,7 +445,7 @@
             <span v-else>Conditions d'utilisation : -</span>
             <div class="ml-4" v-if="show_cond"  v-html="acceptcond"></div>
             <br/>     
-            {{`Créé le ${this.formatDate(employee.datecreated)} par ${this.creator}. `}} {{(employee.datelastmodif != null) ? `Dernière modification le ${this.formatDate(employee.datelastmodif)} par ${this.lastmodifuser}` : ''}}<br/>
+            {{`Créé le ${formatDate(employee.datecreated)} par ${creator}. `}} {{(employee.datelastmodif != null) ? `Dernière modification le ${formatDate(employee.datelastmodif)} par ${lastmodifuser}` : ''}}<br/>
           </v-flex>
         </slot>
       </v-layout>
@@ -747,6 +747,13 @@ export default {
       if (val === null)
       this.manager = ''
     }
+  },
+  computed: {
+     isEmployeeDefined() {
+       let __cond = this.employee != null && this.employee.idemploye != 0
+       console.log('*** __cond: ', __cond, ' idemploye: ', this.employee.idemploye, ' getAffaireSuivi: ', this.getAffaireSuivi)
+       return __cond
+     }
   },
   methods: {
     getAffaireSuivi (idaffaire) {
