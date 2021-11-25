@@ -748,13 +748,6 @@ export default {
       this.manager = ''
     }
   },
-  computed: {
-     isEmployeeDefined() {
-       let __cond = this.employee != null && this.employee.idemploye != 0
-       console.log('*** __cond: ', __cond, ' idemploye: ', this.employee.idemploye, ' getAffaireSuivi: ', this.getAffaireSuivi)
-       return __cond
-     }
-  },
   methods: {
     getAffaireSuivi (idaffaire) {
       if (idaffaire !== null)
