@@ -722,7 +722,7 @@ export default {
     },
     'employee.loginnt': function (val) {
       if (!val) return null
-      val = val.replace(/(\r\n|\n|\r)/gm, "")
+      val = val.replace(/(\r\n|\n|\r|\t)/gm, "")
       if (/^(LAUSANNE_CH|TRX)\\/.test(val))
         this.employee.loginnt = val.toUpperCase()
       else
