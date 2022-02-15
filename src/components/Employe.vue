@@ -590,7 +590,7 @@ export default {
         return pattern.test(value) || 'Valeur invalide'
       },
       telprof: value => {
-        const pattern = /null|^(([1-9]{2}\s[0-9]{2})|((01|0\d{2})\s[1-9][0-9]{2}\s[0-9]{2}\s[0-9]{2}))$/
+        const pattern = /null|^(([1-9]{1}[0-9]{1}\s[0-9]{2})|((01|0\d{2})\s[1-9][0-9]{2}\s[0-9]{2}\s[0-9]{2}))$/
         return pattern.test(value) || 'Valeur invalide'
       },
       natel: value => {
