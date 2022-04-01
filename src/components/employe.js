@@ -206,6 +206,27 @@ class Employe {
     })
   }
 
+  getDataByNtLogin(params, get_data_url, callback) {
+    let __fetch_url = `${get_data_url}/employe_get_data_by_ntlogin.php`
+    axios.post(__fetch_url, {
+      params: params
+    }).then(response => {
+      let __retval = response.data
+      log.l('## in Employe::getDataByNtLogin retval: ', __retval)
+      
+      return callback(__retval)
+    }).catch(error => {
+      if (error.response) {
+        log.e(`## in Employe::getDataByNtLogin Error data: ${error.response.data}, status: ${error.response.status}, headers: ${error.response.headers}`)
+      } else if (error.request) {
+        log.e(`## in Employe::getDataByNtLogin Error request: `, error.request)
+      } else {
+        log.e(`## in Employe::getDataByNtLogin Error: `, error.message)
+      }
+      log.e(`## in Employe::getDataByNtLogin Error: `, error.config)
+    })
+  }
+
   save(employee, get_data_url, callback) {
     let __fetch_url = `${get_data_url}/employe_save.php`
     axios.post(__fetch_url, {

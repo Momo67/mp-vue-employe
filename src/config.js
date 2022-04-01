@@ -50,6 +50,11 @@ export const SAM_STATUS = {
     color: 'error',
     message: 'Introuvable!'
   },
+  WARNING: {
+    icon: 'mdi-account-alert',
+    color: 'warning',
+    message: 'Existe déjà!'
+  },
   SUCCESS: {
     icon: 'mdi-account-check',
     color: 'success',

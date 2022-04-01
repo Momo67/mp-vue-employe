@@ -721,7 +721,10 @@ export default {
       this.employee.initiales = val.toUpperCase()
     },
     'employee.loginnt': function (val) {
-      if (!val) return null
+      if (!val) {
+        this.sam_status = SAM_STATUS.INFO
+        return null
+      }
       val = val.replace(/(\r\n|\n|\r|\t)/gm, "")
       if (/^(LAUSANNE_CH|TRX)\\/.test(val))
         this.employee.loginnt = val.toUpperCase()
@@ -736,6 +739,7 @@ export default {
             setTimeout(() => {
               if (__samaccountname.length >= 8) {
                 this.getEmpADInfo(__samaccountname)
+                this.getDataByNtLogin(__samaccountname)
               }
             }, 250)
           }
@@ -856,6 +860,23 @@ export default {
           this.sam_status = SAM_STATUS.SUCCESS
         } else {
           this.sam_status = SAM_STATUS.ERROR
+        }
+      })
+    },
+    getDataByNtLogin (ntlogin) {
+      EMPLOYE.getDataByNtLogin({ ntlogin: ntlogin }, this.get_data_url.employee_url, (data) => {
+        console.log('getDataByNtLogin:', data)
+        if (data.error !== undefined) {
+          this.displayMessage(`<div>Une erreur s'est produite lors de l'appel de getDataByNtLogin!</div><div>${data.error.reason}</div>`, MSG_LEVEL.ERROR)
+        } else {
+          if (data.length !== 0) {
+            this.sam_status = SAM_STATUS.WARNING
+            let __employe_info = ''
+            data.forEach(element => {
+              __employe_info += `idemploye:&nbsp;${element.IdEmploye}&nbsp;&nbsp;&nbsp;Nom:&nbsp;${element.Nom}&nbsp;&nbsp;&nbsp;Prenom:&nbsp;${element.Prenom}<br/>`
+            });
+            this.displayMessage(`<div>Un employé avec ce LoginNT existe déjà dans Goéland!</div><div>${__employe_info}</div>`, MSG_LEVEL.ERROR)
+          }
         }
       })
     },
