@@ -739,7 +739,7 @@ export default {
             setTimeout(() => {
               if (__samaccountname.length >= 8) {
                 this.getEmpADInfo(__samaccountname)
-                this.getDataByNtLogin(__samaccountname)
+                this.getDataByNtLogin(val)
               }
             }, 250)
           }
@@ -865,17 +865,12 @@ export default {
     },
     getDataByNtLogin (ntlogin) {
       EMPLOYE.getDataByNtLogin({ ntlogin: ntlogin }, this.get_data_url.employee_url, (data) => {
-        console.log('getDataByNtLogin:', data)
         if (data.error !== undefined) {
           this.displayMessage(`<div>Une erreur s'est produite lors de l'appel de getDataByNtLogin!</div><div>${data.error.reason}</div>`, MSG_LEVEL.ERROR)
         } else {
           if (data.length !== 0) {
             this.sam_status = SAM_STATUS.WARNING
-            let __employe_info = ''
-            data.forEach(element => {
-              __employe_info += `idemploye:&nbsp;${element.IdEmploye}&nbsp;&nbsp;&nbsp;Nom:&nbsp;${element.Nom}&nbsp;&nbsp;&nbsp;Prenom:&nbsp;${element.Prenom}<br/>`
-            });
-            this.displayMessage(`<div>Un employé avec ce LoginNT existe déjà dans Goéland!</div><div>${__employe_info}</div>`, MSG_LEVEL.ERROR)
+            this.displayMessage(`<div>Un employé avec ce LoginNT existe déjà dans Goéland!</div><div>idemploye:&nbsp;${data.IdEmploye}&nbsp;&nbsp;&nbsp;Nom:&nbsp;${data.Nom}&nbsp;&nbsp;&nbsp;Prenom:&nbsp;${data.Prenom}</div>`, MSG_LEVEL.ERROR)
           }
         }
       })
