@@ -738,8 +738,8 @@ export default {
           if (__samaccountname != undefined) {
             setTimeout(() => {
               if (__samaccountname.length >= 8) {
-                this.getEmpADInfo(__samaccountname)
-                this.getDataByNtLogin(val)
+                this.getEmpADInfo(val)
+                //this.getDataByNtLogin(val)
               }
             }, 250)
           }
@@ -844,8 +844,9 @@ export default {
         this.acceptcond = __log
       })
     },
-    getEmpADInfo (samaccountname) {
-      EMPLOYE.getEmpADInfo(samaccountname, this.get_data_url.employee_url, (data) => {
+    getEmpADInfo (ntlogin) {
+      let __samaccountname = ntlogin.split('\\')[1]
+      EMPLOYE.getEmpADInfo(__samaccountname, this.get_data_url.employee_url, (data) => {
         if (data.count !== 0) {
           const __empinfo = data[0]
           this.employee.idpolitesse = (__empinfo.title !== undefined) ? ((__empinfo.title[0] === 'M.') ? '1' : '2') : '1'
@@ -861,6 +862,7 @@ export default {
         } else {
           this.sam_status = SAM_STATUS.ERROR
         }
+        this.getDataByNtLogin(ntlogin)
       })
     },
     getDataByNtLogin (ntlogin) {
