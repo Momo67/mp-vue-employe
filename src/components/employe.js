@@ -87,7 +87,6 @@ class Employe {
       } else {
         log.e(`## in Employe::getEmpData Error: `, error.message)
       }
-      log.e(`## in Employe::getEmpData Error: `, error.config)
     })
   }
 
@@ -135,19 +134,25 @@ class Employe {
 
   getEmpADInfo(samaccountname, get_data_url, callback) {
     let __fetch_url = `${get_data_url}/../../../public/annuaire_interne/user_data.php?samaccountname=${samaccountname}&mode=light`
-    axios.get(__fetch_url).then(response => {
-      let __retval = response.data
-      callback(__retval)
 
-      log.l('## in Employe::getEmpADInfo retval: ', __retval)
-    }).catch(error => {
-      if (error.response) {
-        log.e(`## in Employe::getEmpADInfo Error data: ${error.response.data}, status: ${error.response.status}, headers: ${error.response.headers}`)
-      } else if (error.request) {
-        log.e(`## in Employe::getEmpADInfo Error request: `, error.request)
-      } else {
-        log.e(`## in Employe::getEmpADInfo Error message: `, error.message)
-      }
+    return new Promise((resolve, reject) => {
+      axios.get(__fetch_url).then(response => {
+        let __retval = response.data
+        callback(__retval)
+        resolve(__retval)
+  
+        log.l('## in Employe::getEmpADInfo retval: ', __retval)
+      }).catch(error => {
+        if (error.response) {
+          log.e(`## in Employe::getEmpADInfo Error data: ${error.response.data}, status: ${error.response.status}, headers: ${error.response.headers}`)
+        } else if (error.request) {
+          log.e(`## in Employe::getEmpADInfo Error request: `, error.request)
+        } else {
+          log.e(`## in Employe::getEmpADInfo Error message: `, error.message)
+        }
+        reject('Une erreur s\'est produite lors de l\'appel de getEmpADInfo')
+      })
+  
     })
   }
 
