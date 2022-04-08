@@ -738,7 +738,9 @@ export default {
           if (__samaccountname != undefined) {
             setTimeout(() => {
               if (__samaccountname.length >= 8) {
-                this.getEmpADInfo(val).then(this.getDataByNtLogin(val))
+                this.getEmpADInfo(val).then(() => {
+                  this.getDataByNtLogin(val)
+                })
               }
             }, 250)
           }
@@ -865,6 +867,9 @@ export default {
     },
     getDataByNtLogin (ntlogin) {
       EMPLOYE.getDataByNtLogin({ ntlogin: ntlogin }, this.get_data_url.employee_url, (data) => {
+        if (!data) {
+          return
+        }
         if (data.error !== undefined) {
           this.displayMessage(`<div>Une erreur s'est produite lors de l'appel de getDataByNtLogin!</div><div>${data.error.reason}</div>`, MSG_LEVEL.ERROR)
         } else {
