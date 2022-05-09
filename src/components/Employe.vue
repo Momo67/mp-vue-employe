@@ -292,6 +292,7 @@
                   <v-icon v-on="on">mdi-account</v-icon>
                 </template>
                 <employe-search
+                  v-if="show_employee_search"
                   id="employe-search"
                   v-model="show_employee_search"
                   :fullscreen="false"
