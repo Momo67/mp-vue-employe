@@ -150,6 +150,7 @@
               v-show="show_ou"
               class="mx-auto tree-ou"
               max-width="500"
+              @keyup.escape="show_ou = !show_ou"
             >
               <v-sheet class="pa-4 primary lighten-2">
                 <v-text-field
@@ -925,7 +926,7 @@ export default {
       }
     },
     showOU () {
-      this.show_ou = true
+      this.show_ou = !this.show_ou
     },
     getFonctionList() {
       EMPLOYE.getFonctionList (this.get_data_url.employee_url, (data) => {
