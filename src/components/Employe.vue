@@ -105,30 +105,27 @@
 -->      
       <v-layout wrap v-show="show_prof_data">
 
-
-
-      <!--
-        <v-flex xs12 sm4 md4>
-          <v-autocomplete
-            v-model="employee.idou"
-            :rules="[rules.required]"
-            :items="orgunits"
-            item-text="DescTreeDenorm"
-            item-value="IdOrgUnit"
-            :search-input="ouSearch"
-            :label="$t('userInterface.OrgUnit')"
-            :placeholder="$t('userInterface.SearchHint')"
-            autocomplete="something-new"
-            hide-no-data
-            color="primary"
-            required
-            clearable
-          >
-            <template v-slot:selection="{ item }">{{ item.DescTreeDenorm }}</template>
-          </v-autocomplete>
-        </v-flex>
-      -->
-
+        <template v-if="ouDisplayType == 'select'">
+          <v-flex xs12 sm4 md4>
+            <v-autocomplete
+              v-model="employee.idou"
+              :rules="[rules.required]"
+              :items="orgunits"
+              item-text="DescTreeDenorm"
+              item-value="IdOrgUnit"
+              :search-input="ouSearch"
+              :label="$t('userInterface.OrgUnit')"
+              :placeholder="$t('userInterface.SearchHint')"
+              autocomplete="something-new"
+              hide-no-data
+              color="primary"
+              required
+              clearable
+            >
+              <template v-slot:selection="{ item }">{{ item.DescTreeDenorm }}</template>
+            </v-autocomplete>
+          </v-flex>
+        </template>
 
         <template v-if="ouDisplayType == 'treeview'">
           <v-flex xs12 sm4 md4>
@@ -143,9 +140,6 @@
               @click:clear="clearTreeOU">
             </v-text-field>
           </v-flex>
-          <!--
-          <v-flex xs4>
-          -->
             <v-card
               v-show="show_ou"
               class="mx-auto tree-ou"
@@ -161,7 +155,8 @@
                               hide-details
                               clearable
                               @input="searchOU"
-                              ></v-text-field>
+                              >
+                  </v-text-field>
               </v-sheet>
               <v-card-text class="tree-ou-text">
                 <v-treeview ref="tree"
@@ -179,9 +174,6 @@
                 </v-treeview>
               </v-card-text>
             </v-card>
-          <!--            
-          </v-flex>
-          -->
         </template>
 
 
@@ -891,7 +883,7 @@ export default {
       })
     },
     getSelectedOU (value) {
-      if (value[0].id != 1) {
+      if ((value.length != 0) && (value[0].id != 1)) {
         this.employee.idou = value[0].id
         this.orgunit.OUName = value[0].description
         this.show_ou = false
@@ -902,7 +894,8 @@ export default {
       let __reg = new RegExp('{"id":' + idOU + ',"name":"(.*?)","description":"(.*?)"')
       let __ouname = JSON.stringify(this.orgunits).match(__reg)[2]
       this.orgunit.OUName = __ouname
-      this.ouSearch = __ouname
+      __reg = new RegExp('(.+?)\\s*(\\(.+\\))')
+      this.ouSearch = (__ouname.match(__reg) != null) ? __ouname.match(__reg)[1] : __ouname
       this.$refs.tree.updateAll(true)
     },
     clearTreeOU () {
@@ -943,7 +936,7 @@ export default {
     getEmpData(idemploye) {
       EMPLOYE.getEmpData(idemploye, this.get_data_url.employee_url, (data) => {
         this.employee = Object.assign({}, data)
-        if (this.employee.idou != null)
+        if ((this.ouDisplayType == 'treeview') && (this.employee.idou != null))
           this.setTreeOU(this.employee.idou)
         if (this.employee.idmanager != null)
           this.getManagerName(this.employee.idmanager)
