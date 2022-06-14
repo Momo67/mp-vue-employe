@@ -553,8 +553,7 @@ import { employe as EMPLOYE } from './employe'
 import { orgunit as ORGUNIT } from './orgunit'
 import { msg_level as MSG_LEVEL } from './employe'
 
-//import EmployeSearch from 'mp-vue-employe-search'
-import EmployeSearch from '../../lib/EmployeSearch.umd'
+import EmployeSearch from 'mp-vue-employe-search'
 import Log from 'cgil-log'
 import {mask} from 'vue-the-mask'
 
