@@ -21,6 +21,7 @@
       ></HelloWorld>
       <employe
         v-model="idemploye"
+        ou-display-type="treeview"
       >
       <!--
         <template v-slot:actions="{ on: { save, validate, setVal  }, props: { employee, valid } }">
@@ -78,7 +79,7 @@ export default {
     Employe
   },
   data: () => ({
-    idemploye: 10958,//15262,//10307,
+    idemploye: 17883,//15262,//8997,//10958,//
     //idemploye: 0,
     id: 0,
     justify: [

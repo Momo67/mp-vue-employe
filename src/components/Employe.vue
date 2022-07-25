@@ -104,25 +104,80 @@
       </v-layout>
 -->      
       <v-layout wrap v-show="show_prof_data">
-        <v-flex xs12 sm4 md4>
-          <v-autocomplete
-            v-model="employee.idou"
-            :rules="[rules.required]"
-            :items="orgunits"
-            item-text="DescTreeDenorm"
-            item-value="IdOrgUnit"
-            :search-input="ouSearch"
-            :label="$t('userInterface.OrgUnit')"
-            :placeholder="$t('userInterface.SearchHint')"
-            autocomplete="something-new"
-            hide-no-data
-            color="primary"
-            required
-            clearable
-          >
-            <template v-slot:selection="{ item }">{{ item.DescTreeDenorm }}</template>
-          </v-autocomplete>
-        </v-flex>
+
+        <template v-if="ouDisplayType == 'select'">
+          <v-flex xs12 sm4 md4>
+            <v-autocomplete
+              v-model="employee.idou"
+              :rules="[rules.required]"
+              :items="orgunits"
+              item-text="DescTreeDenorm"
+              item-value="IdOrgUnit"
+              :search-input="ouSearch"
+              :label="$t('userInterface.OrgUnit')"
+              :placeholder="$t('userInterface.SearchHint')"
+              autocomplete="something-new"
+              hide-no-data
+              color="primary"
+              required
+              clearable
+            >
+              <template v-slot:selection="{ item }">{{ item.DescTreeDenorm }}</template>
+            </v-autocomplete>
+          </v-flex>
+        </template>
+
+        <template v-if="ouDisplayType == 'treeview'">
+          <v-flex xs12 sm4 md4>
+            <v-text-field 
+              v-model="orgunit.OUName" 
+              :rules="[rules.required]"
+              :label="$t('userInterface.OrgUnit')" 
+              readonly 
+              clearable 
+              required
+              @click="showOU" 
+              @click:clear="clearTreeOU">
+            </v-text-field>
+          </v-flex>
+            <v-card
+              v-show="show_ou"
+              class="mx-auto tree-ou"
+              max-width="500"
+              @keyup.escape="show_ou = !show_ou"
+            >
+              <v-sheet class="pa-4 primary lighten-2">
+                <v-text-field
+                              v-model="ouSearch"
+                              :label="$t('userInterface.searchOU')"
+                              dark
+                              flat
+                              hide-details
+                              clearable
+                              @input="searchOU"
+                              >
+                  </v-text-field>
+              </v-sheet>
+              <v-card-text class="tree-ou-text">
+                <v-treeview ref="tree"
+                            @update:active="getSelectedOU"
+                            return-object   
+                            dense
+                            :active="active_ou"
+                            activatable
+                            active-class="grey lighten-4 indigo--text"
+                            hoverable
+                            :items="orgunits"
+                            :search="ouSearch"
+                            :open.sync="init_opened_ou"
+                            >
+                </v-treeview>
+              </v-card-text>
+            </v-card>
+        </template>
+
+
+
 
         <v-flex xs12 sm4 md4>
           <v-autocomplete
@@ -331,7 +386,7 @@
             v-mask="'##.##.####'"
             clearable
           >
-            <template v-slot:append>
+            <template v-slot:append>                  
               <v-menu
                 ref="menuDateNaissance"
                 v-model="menuDateNaissance"
@@ -541,6 +596,14 @@ export default {
       type: Boolean,
       default: false,
       required: false
+    },
+    ouDisplayType: {
+      type: String,
+      default: 'treeview',
+      require: false,
+      validator(value) {
+        return ['treeview', 'select'].includes(value)
+      }      
     }
   },
   data: () => ({
@@ -639,7 +702,13 @@ export default {
     orgunit: undefined,
     orgunits: [],
     ouSearch: '',
-    fonctions: []
+    fonctions: [],
+    openedOU: [],
+    lastOpenedOU: [],
+    allOpenedOU: false,
+    show_ou: false,
+    active_ou: [],
+    init_opened_ou: [],
   }),
   watch: {
     value (val) {
@@ -652,6 +721,7 @@ export default {
       if (val === -1) {
         this.employee.isactive = '1'      // Actif: oui
         this.employee.idfonction = '4'    // Pas saisie
+        this.clearTreeOU()
         this.$refs.form_data.validate()
         this.employee.idemploye = 0
       } else if (val === 0) {
@@ -776,7 +846,7 @@ export default {
       this.show_perso_data = this.showPersoData
       this.show_comment = this.showComment
       this.show_cond = false
-      this.getOUList()
+      this.getOU()
       this.getFonctionList()
     },
     validate () {
@@ -789,10 +859,66 @@ export default {
         this.displayMessage('La date de fin d\'activité doit se situer après la date de début d\'activité...', MSG_LEVEL.WARNING)
       }
     },
+    getOU () {
+      if (this.ouDisplayType == 'select') {
+        this.getOUList()
+      } else {
+        this.getOUTree()
+      }
+    },
     getOUList() {
       ORGUNIT.getList (this.orgunit, this.get_data_url.orgunit_url, (data) => {
         this.orgunits = data
       })
+    },
+    initTreeOU () {
+      this.$refs.tree.updateAll(false)
+      this.init_opened_ou = [{ "id": 1}]
+    },
+    getOUTree() {
+      ORGUNIT.getTree (this.get_data_url.orgunit_url, (data) => {
+        this.orgunits = data
+        this.initTreeOU()
+      })
+    },
+    getSelectedOU (value) {
+      if ((value.length != 0) && (value[0].id != 1)) {
+        this.employee.idou = value[0].id
+        this.orgunit.OUName = value[0].description
+        this.show_ou = false
+      }
+    },
+    setTreeOU (idOU) {
+      this.active_ou = [{id: idOU}]
+      let __reg = new RegExp('{"id":' + idOU + ',"name":"(.*?)","description":"(.*?)"')
+      let __ouname = JSON.stringify(this.orgunits).match(__reg)[2]
+      this.orgunit.OUName = __ouname
+      __reg = new RegExp('(.+?)\\s*(\\(.+\\))')
+      this.ouSearch = (__ouname.match(__reg) != null) ? __ouname.match(__reg)[1] : __ouname
+      this.$refs.tree.updateAll(true)
+    },
+    clearTreeOU () {
+      this.employee.idou = null
+      this.orgunit.OUName = ''
+      this.ouSearch = ''
+      this.active_ou = [{id:1}]
+      this.initTreeOU()
+    },
+    searchOU (val) {
+      if ((val) && (val.length > 2)) {
+        if (!this.allOpenedOU) {
+          this.lastOpenedOU = this.openedOU
+          this.$refs.tree.updateAll(true)
+          this.allOpenedOU = true
+        }
+      } else {
+        this.$refs.tree.updateAll(false)
+        this.allOpenedOU = false
+        this.openedOU = this.lastOpenedOU
+      }
+    },
+    showOU () {
+      this.show_ou = !this.show_ou
     },
     getFonctionList() {
       EMPLOYE.getFonctionList (this.get_data_url.employee_url, (data) => {
@@ -809,6 +935,8 @@ export default {
     getEmpData(idemploye) {
       EMPLOYE.getEmpData(idemploye, this.get_data_url.employee_url, (data) => {
         this.employee = Object.assign({}, data)
+        if ((this.ouDisplayType == 'treeview') && (this.employee.idou != null))
+          this.setTreeOU(this.employee.idou)
         if (this.employee.idmanager != null)
           this.getManagerName(this.employee.idmanager)
         if (this.employee.idcreator != null)
@@ -859,7 +987,11 @@ export default {
             const [, , indicatif, part1, part2, part3] = /^\+(\d{1,2})\s(\d{1,2})\s(\d{3})\s(\d{2})\s(\d{2})$/.exec(__empinfo.telephonenumber[0])
             this.employee.telprof = (part1 === '315') ? `${part2} ${part3}` : `0${indicatif} ${part1} ${part2} ${part3}`
           }
-          this.ouSearch = (__empinfo.department.count !== 0) ? (__empinfo.department[0]) : this.ouSearch
+          if (__empinfo.department.count !== 0) {
+            this.ouSearch = __empinfo.department[0]
+            this.orgunit.OUName = ''
+            this.$refs.tree.updateAll(true)
+          }
           this.sam_status = SAM_STATUS.SUCCESS
         } else {
           this.sam_status = SAM_STATUS.ERROR
@@ -955,6 +1087,21 @@ export default {
 <style lang="css" scoped>
 .container {
   padding: 1px;
+}
+.tree-ou {
+  position: absolute;
+  padding: 20px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-55%, 0%);
+  z-index: 100;
+}
+.tree-ou-text {
+  overflow-y: auto;
+  max-height: 500px;
+}
+.v-content__wrap {
+  position: relative;
 }
 </style>
 <style lang="css">
