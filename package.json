@@ -4,9 +4,9 @@
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "lint": "vue-cli-service lint",
     "build-lib": "vue-cli-service build --target lib --mode production --name Employe ./src/components/Employe.vue",
     "build-wc": "vue-cli-service build --target wc --mode production --name mp-employe ./src/components/Employe.vue",
+    "lint": "vue-cli-service lint",
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'"
   },
   "main": "dist/Employe.umd.min.js",
@@ -14,11 +14,13 @@
     "cgil-log": "^1.0.5",
     "core-js": "^3.6.5",
     "jquery": "^3.5.1",
+    "jshint": "^2.13.5",
     "mp-vue-employe-search": "^4.3.12",
     "vue": "^2.6.12",
     "vue-i18n": "^8.22.3",
     "vue-the-mask": "^0.11.1",
-    "vuetify": "^2.6.10"
+    "vuetify": "^2.6.10",
+    "webpack": "^5.74.0"
   },
   "devDependencies": {
     "@kazupon/vue-i18n-loader": "^0.3.0",
