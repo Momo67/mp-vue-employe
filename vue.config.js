@@ -1,4 +1,7 @@
-module.exports = {
+const { defineConfig } = require('@vue/cli-service')
+
+module.exports = defineConfig({
+  parallel: true,
   chainWebpack: config => {
     config.module
       .rule("i18n")
@@ -8,10 +11,9 @@ module.exports = {
       .loader("@kazupon/vue-i18n-loader")
       .end();
   },
-  "transpileDependencies": [
+  transpileDependencies: [
     "vuetify"
   ],
-
   pluginOptions: {
     i18n: {
       locale: 'fr',
@@ -20,4 +22,4 @@ module.exports = {
       enableInSFC: true
     }
   }
-}
+})
