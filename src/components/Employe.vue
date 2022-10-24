@@ -545,7 +545,6 @@
 <script>
 
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
-//import '@mdi/font/css/materialdesignicons.css'
 
 import { DEV, ORGUNIT_INIT, EMPLOYEE_INIT, SAM_STATUS } from '../config'
 import { EMP_URL_AJAX, ORGUNIT_URL_AJAX } from '../config'
