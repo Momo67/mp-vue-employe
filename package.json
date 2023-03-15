@@ -40,7 +40,7 @@
     "vue-cli-plugin-vuetify": "^2.0.9",
     "vue-template-compiler": "^2.6.12",
     "vuetify-loader": "^1.6.0",
-    "webpack": "^5.74.0"
+    "webpack": "^5.76.0"
   },
   "homepage": "https://github.com/Momo67/mp-vue-employe#readme",
   "license": "MIT",
