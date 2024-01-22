@@ -86,7 +86,7 @@ export default {
   },
 
   data: () => ({
-    idemploye: 10958
+    idemploye: 10958//16205
   }),
 };
 </script>

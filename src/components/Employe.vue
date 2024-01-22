@@ -484,8 +484,8 @@
         <slot name="infos" v-bind:employee="employee">
           <v-flex v-if="employee.idemploye != 0">
             <span v-html="getAffaireSuivi(employee.idaffairesuiviutilisateur)"></span><br/>
-            {{((parseInt(employee.nbragendetosend) === 0) ? `Aucun` : `${employee.nbragendetosend}`) + ` agendé${(employee.nbragendetosend > 1) ? 's' : ''} à recevoir.`}}&nbsp;
-            {{((parseInt(employee.nbrcirculationtosend) === 0) ? `Aucune` : `${employee.nbrcirculationtosend}`) + ` circulation${(employee.nbrcirculationtosend > 1) ? 's' : ''} à recevoir.`}}<br/>
+            <span :class="{bold: (employee.nbragendetosend > 0)}">{{((parseInt(employee.nbragendetosend) === 0) ? `Aucun` : `${employee.nbragendetosend}`) + ` agendé${(employee.nbragendetosend > 1) ? 's' : ''} à recevoir.`}}&nbsp;</span>
+            <span :class="{bold: (employee.nbrcirculationtosend > 0)}">{{((parseInt(employee.nbrcirculationtosend) === 0) ? `Aucune` : `${employee.nbrcirculationtosend}`) + ` circulation${(employee.nbrcirculationtosend > 1) ? 's' : ''} à recevoir.`}}<br/></span>
             <span v-if="employee.dateacceptcond !== null">{{`Conditions d'utilisation acceptées le ${formatDate(employee.dateacceptcond)}`}}
               <span v-if="acceptcond !== ''">
                 <v-tooltip bottom>
@@ -1120,6 +1120,9 @@ export default {
 }
 .cond_ref {
   color: red;
+}
+.bold {
+  font-weight: bold; 
 }
 </style>
 
