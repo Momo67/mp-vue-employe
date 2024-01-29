@@ -484,8 +484,8 @@
         <slot name="infos" v-bind:employee="employee">
           <v-flex v-if="employee.idemploye != 0">
             <span v-html="getAffaireSuivi(employee.idaffairesuiviutilisateur)"></span><br/>
-            {{((parseInt(employee.nbragendetosend) === 0) ? `Aucun` : `${employee.nbragendetosend}`) + ` agendé${(employee.nbragendetosend > 1) ? 's' : ''} à recevoir.`}}&nbsp;
-            {{((parseInt(employee.nbrcirculationtosend) === 0) ? `Aucune` : `${employee.nbrcirculationtosend}`) + ` circulation${(employee.nbrcirculationtosend > 1) ? 's' : ''} à recevoir.`}}<br/>
+            <span :class="{bold: (employee.nbragendetosend > 0)}">{{((parseInt(employee.nbragendetosend) === 0) ? `Aucun` : `${employee.nbragendetosend}`) + ` agendé${(employee.nbragendetosend > 1) ? 's' : ''} à recevoir.`}}&nbsp;</span>
+            <span :class="{bold: (employee.nbrcirculationtosend > 0)}">{{((parseInt(employee.nbrcirculationtosend) === 0) ? `Aucune` : `${employee.nbrcirculationtosend}`) + ` circulation${(employee.nbrcirculationtosend > 1) ? 's' : ''} à recevoir.`}}<br/></span>
             <span v-if="employee.dateacceptcond !== null">{{`Conditions d'utilisation acceptées le ${formatDate(employee.dateacceptcond)}`}}
               <span v-if="acceptcond !== ''">
                 <v-tooltip bottom>
@@ -545,7 +545,6 @@
 <script>
 
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
-import '@mdi/font/css/materialdesignicons.css'
 
 import { DEV, ORGUNIT_INIT, EMPLOYEE_INIT, SAM_STATUS } from '../config'
 import { EMP_URL_AJAX, ORGUNIT_URL_AJAX } from '../config'
@@ -554,7 +553,7 @@ import { orgunit as ORGUNIT } from './orgunit'
 import { msg_level as MSG_LEVEL } from './employe'
 
 import EmployeSearch from 'mp-vue-employe-search'
-import Log from 'cgil-log'
+import { Log } from 'cgil-log'
 import {mask} from 'vue-the-mask'
 
 import { removeAccents } from './accents'
@@ -982,7 +981,7 @@ export default {
           this.employee.idpolitesse = (__empinfo.title !== undefined) ? ((__empinfo.title[0] === 'M.') ? '1' : '2') : '1'
           this.employee.nom = (__empinfo.sn !== undefined) ? __empinfo.sn[0] : ''
           this.employee.prenom = (__empinfo.givenname !== undefined) ? __empinfo.givenname[0] : ''
-          this.employee.email = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(__empinfo.mail[0]) ? __empinfo.mail[0] : ''
+          this.employee.email = (__empinfo.mail !== undefined) ? (/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(__empinfo.mail[0]) ? __empinfo.mail[0] : '') : ''
           if ((__empinfo.telephonenumber !== undefined) && (/^\+(\d{1,2})\s(\d{1,2})\s(\d{3})\s(\d{2})\s(\d{2})$/.test(__empinfo.telephonenumber[0]))) {
             const [, , indicatif, part1, part2, part3] = /^\+(\d{1,2})\s(\d{1,2})\s(\d{3})\s(\d{2})\s(\d{2})$/.exec(__empinfo.telephonenumber[0])
             this.employee.telprof = (part1 === '315') ? `${part2} ${part3}` : `0${indicatif} ${part1} ${part2} ${part3}`
@@ -1121,6 +1120,9 @@ export default {
 }
 .cond_ref {
   color: red;
+}
+.bold {
+  font-weight: bold; 
 }
 </style>
 
